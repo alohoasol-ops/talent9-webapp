@@ -1,7 +1,7 @@
 "use client";
 
 import RadarChart from "./RadarChart";
-import { rankedOf, commentFor } from "@/lib/talents";
+import { rankedOf, commentFor, presetFits } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
 function RankTable({ scores }: { scores: TeamMember["scores"] }) {
@@ -53,11 +53,14 @@ export default function RosterPanel({
       ) : (
         members.map((m) => {
           const top3 = rankedOf(m.scores).slice(0, 3);
+          const fits = presetFits(m.scores);
+          const bestFit = fits[0];
           return (
             <details className="roster-item" key={m.id}>
               <summary>
                 <span className="r-name">{m.name || "(氏名未設定)"}</span>
                 <span className="r-date mono">{m.measuredDate || "－"}</span>
+                <span className="chip fit-chip">適性：{bestFit.name} {bestFit.fit.toFixed(0)}%</span>
                 <span className="r-top3">
                   {top3.map((r) => (
                     <span className="chip" key={r.t.key}>{r.t.name} {r.score.toFixed(1)}</span>
@@ -81,6 +84,16 @@ export default function RosterPanel({
                 <RankTable scores={m.scores} />
               </div>
               <div className="strength-block">
+                <p className="field-group-title">適性タイプ(職務ポジションとの適合度)</p>
+                <div style={{ marginBottom: 16 }}>
+                  {fits.map((f, idx) => (
+                    <div className="coverage-row" key={f.name}>
+                      <span className="cov-label">{idx === 0 && "★ "}{f.name}</span>
+                      <div className="cov-track"><div className="cov-fill" style={{ width: `${f.fit}%` }} /></div>
+                      <span className="cov-n">{f.fit.toFixed(0)}%</span>
+                    </div>
+                  ))}
+                </div>
                 <p className="field-group-title">TOP3の強み・向いている職種</p>
                 <div className="strength-grid">
                   {top3.map((r, idx) => (
