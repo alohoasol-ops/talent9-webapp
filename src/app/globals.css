@@ -118,6 +118,7 @@ button:disabled{ opacity:.45; cursor:not-allowed; }
 .chip{ font-size:11.5px; padding:2px 9px; border-radius:999px; background:var(--brand-soft); color:var(--brand); border:1px solid var(--border); white-space:nowrap; }
 .chip.fit-chip{ background:var(--accent); color:var(--accent-ink); border-color:var(--accent); font-weight:700; }
 .roster-item .r-del{ font-size:12px; color:var(--danger); background:none; border:none; padding:4px 6px; }
+.roster-item .r-print{ font-size:12px; color:var(--brand); background:none; border:none; padding:4px 6px; }
 .roster-detail{ padding:14px; border-top:1px solid var(--border); display:grid; grid-template-columns:200px 1fr; gap:16px; align-items:start; background:var(--surface-alt); }
 @media (max-width:600px){ .roster-detail{ grid-template-columns:1fr; } }
 
@@ -207,4 +208,8 @@ table.data td.name-cell{ font-weight:600; white-space:normal; min-width:100px; }
   .no-print{ display:none !important; }
   .two-col{ grid-template-columns:1fr; }
   .panel{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+  .roster-print-single .roster-title,
+  .roster-print-single .empty-state{ display:none !important; }
+  .roster-print-single .roster-item:not(.print-target){ display:none !important; }
+  .roster-print-single .roster-item.print-target{ border:none; }
 }
