@@ -181,4 +181,30 @@ table.data td.name-cell{ font-weight:600; white-space:normal; min-width:100px; }
 .fit-pct{ width:52px; text-align:right; font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink-dim); }
 
 .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:18px; }
-.stat-card{ border:1px solid var(--border); border-radius:10px; pad
+.stat-card{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface-alt); }
+.stat-card .stat-n{ font-size:22px; font-weight:700; color:var(--brand); font-variant-numeric:tabular-nums; }
+.stat-card .stat-l{ font-size:11.5px; color:var(--ink-dim); margin-top:2px; }
+
+.company-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:12px 14px; border:1px solid var(--border); border-radius:12px; margin-bottom:10px; background:var(--surface); }
+.company-row .c-name{ font-weight:700; flex:1; }
+.company-row .c-name a{ color:var(--ink); text-decoration:none; }
+.company-row .c-name a:hover{ color:var(--brand); }
+.company-row .c-stat{ font-size:12.5px; color:var(--ink-dim); }
+.company-row .c-sub{ flex-basis:100%; display:flex; align-items:center; gap:10px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:12.5px; color:var(--ink-dim); }
+
+.disclaimer{ margin-top:18px; padding:14px 16px; border-radius:10px; background:var(--surface-alt); border:1px solid var(--border); font-size:12px; color:var(--ink-dim); line-height:1.7; }
+.disclaimer strong{ color:var(--ink); }
+.disclaimer + .disclaimer{ margin-top:10px; }
+
+.auth-shell{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
+.auth-card{ width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); padding:32px 28px; }
+.auth-card h1{ font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Hiragino Mincho ProN",Georgia,serif; font-size:24px; color:var(--brand); margin:0 0 6px; text-align:center; }
+.auth-card p.sub{ text-align:center; color:var(--ink-dim); font-size:13px; margin:0 0 24px; }
+.field-error{ color:var(--danger); font-size:12.5px; margin-top:10px; }
+
+@media print{
+  body{ background:#fff; }
+  .no-print{ display:none !important; }
+  .two-col{ grid-template-columns:1fr; }
+  .panel{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+}
