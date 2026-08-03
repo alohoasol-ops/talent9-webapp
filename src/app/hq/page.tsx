@@ -66,7 +66,7 @@ export default async function HqPage() {
             companyStats.map(({ company, count, topTalent }) => (
               <div className="company-row" key={company.id}>
                 <span className="c-name">
-                  <Link href={`/hq/company/${company.slug}`}>{company.name}</Link>
+                  <Link href={`/hq/company/${company.id}`}>{company.name}</Link>
                 </span>
                 <span className="c-stat">{count}名</span>
                 <span className="c-stat">{topTalent ? `強み：${topTalent}` : "データなし"}</span>
@@ -86,3 +86,4 @@ export default async function HqPage() {
     </>
   );
 }
+
