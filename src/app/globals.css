@@ -131,6 +131,24 @@ button:disabled{ opacity:.45; cursor:not-allowed; }
 .strength-card .roles{ margin:0; font-size:12.5px; }
 .strength-card .roles strong{ color:var(--ink); }
 
+.info-box{ background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--brand); border-radius:8px; padding:12px 14px; font-size:13px; color:var(--ink); line-height:1.7; }
+
+.motiv-box{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface); }
+.motiv-title{ margin:0 0 8px; font-size:12.5px; font-weight:700; color:var(--ink-dim); }
+.motiv-item{ margin:0 0 6px; font-size:12.5px; color:var(--ink); }
+.motiv-box.motiv-up .motiv-title{ color:var(--brand); }
+.motiv-box.motiv-down .motiv-title{ color:var(--danger); }
+
+.compat-card{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface); border-left-width:3px; }
+.compat-card.compat-good{ border-left-color:var(--brand); }
+.compat-card.compat-tense{ border-left-color:var(--accent); }
+.compat-label{ margin:0 0 4px; font-size:11.5px; color:var(--ink-dim); font-weight:700; }
+.compat-card h4{ margin:0 0 6px; font-size:15px; color:var(--brand); font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Hiragino Mincho ProN",Georgia,serif; }
+.compat-card p{ margin:0; font-size:12.5px; color:var(--ink); }
+
+table.goal-sheet td{ min-width:140px; }
+table.goal-sheet td:first-child{ font-weight:600; white-space:normal; min-width:140px; }
+
 .scroll-x{ overflow-x:auto; }
 table.data{ width:100%; border-collapse:collapse; font-size:13px; }
 table.data th{ text-align:left; font-size:11px; text-transform:uppercase; letter-spacing:0.04em; color:var(--ink-dim); border-bottom:1px solid var(--border); padding:6px 8px; font-weight:700; white-space:nowrap; }
@@ -163,30 +181,4 @@ table.data td.name-cell{ font-weight:600; white-space:normal; min-width:100px; }
 .fit-pct{ width:52px; text-align:right; font-size:13px; font-variant-numeric:tabular-nums; color:var(--ink-dim); }
 
 .stat-grid{ display:grid; grid-template-columns:repeat(auto-fit,minmax(120px,1fr)); gap:12px; margin-bottom:18px; }
-.stat-card{ border:1px solid var(--border); border-radius:10px; padding:12px 14px; background:var(--surface-alt); }
-.stat-card .stat-n{ font-size:22px; font-weight:700; color:var(--brand); font-variant-numeric:tabular-nums; }
-.stat-card .stat-l{ font-size:11.5px; color:var(--ink-dim); margin-top:2px; }
-
-.company-row{ display:flex; align-items:center; gap:14px; flex-wrap:wrap; padding:12px 14px; border:1px solid var(--border); border-radius:12px; margin-bottom:10px; background:var(--surface); }
-.company-row .c-name{ font-weight:700; flex:1; }
-.company-row .c-name a{ color:var(--ink); text-decoration:none; }
-.company-row .c-name a:hover{ color:var(--brand); }
-.company-row .c-stat{ font-size:12.5px; color:var(--ink-dim); }
-.company-row .c-sub{ flex-basis:100%; display:flex; align-items:center; gap:10px; margin-top:8px; padding-top:8px; border-top:1px solid var(--border); font-size:12.5px; color:var(--ink-dim); }
-
-.disclaimer{ margin-top:18px; padding:14px 16px; border-radius:10px; background:var(--surface-alt); border:1px solid var(--border); font-size:12px; color:var(--ink-dim); line-height:1.7; }
-.disclaimer strong{ color:var(--ink); }
-.disclaimer + .disclaimer{ margin-top:10px; }
-
-.auth-shell{ min-height:100vh; display:flex; align-items:center; justify-content:center; padding:20px; }
-.auth-card{ width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border); border-radius:16px; box-shadow:var(--shadow); padding:32px 28px; }
-.auth-card h1{ font-family:"Iowan Old Style","Palatino Linotype",Palatino,"Hiragino Mincho ProN",Georgia,serif; font-size:24px; color:var(--brand); margin:0 0 6px; text-align:center; }
-.auth-card p.sub{ text-align:center; color:var(--ink-dim); font-size:13px; margin:0 0 24px; }
-.field-error{ color:var(--danger); font-size:12.5px; margin-top:10px; }
-
-@media print{
-  body{ background:#fff; }
-  .no-print{ display:none !important; }
-  .two-col{ grid-template-columns:1fr; }
-  .panel{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
-}
+.stat-card{ border:1px solid var(--border); border-radius:10px; pad
