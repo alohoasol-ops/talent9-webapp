@@ -157,6 +157,8 @@ table.data td{ padding:7px 8px; border-bottom:1px solid var(--border); vertical-
 table.data td.name-cell{ font-weight:600; white-space:normal; min-width:100px; }
 .heat-cell{ text-align:center; font-variant-numeric:tabular-nums; border-radius:6px; }
 
+.fit-note{ font-size:11.5px; color:var(--ink-dim); margin:-2px 0 12px; line-height:1.5; }
+
 .coverage-row{ display:flex; align-items:center; gap:10px; margin-bottom:8px; font-size:13px; }
 .coverage-row .cov-label{ width:120px; flex-shrink:0; color:var(--ink); }
 .coverage-row .cov-track{ flex:1; height:8px; border-radius:99px; background:var(--surface-alt); overflow:hidden; }
