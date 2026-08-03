@@ -6,6 +6,8 @@ import { rankedOf } from "@/lib/talents";
 import Topbar from "@/components/Topbar";
 import PortfolioPanel from "@/components/PortfolioPanel";
 import SummaryPanel from "@/components/SummaryPanel";
+import ConfirmSubmitButton from "@/components/ConfirmSubmitButton";
+import { deleteCompanyAction } from "./actions";
 
 export default async function HqPage() {
   const profile = await requireHqAdmin();
@@ -70,6 +72,14 @@ export default async function HqPage() {
                 </span>
                 <span className="c-stat">{count}名</span>
                 <span className="c-stat">{topTalent ? `強み：${topTalent}` : "データなし"}</span>
+                <form action={deleteCompanyAction.bind(null, company.id)}>
+                  <ConfirmSubmitButton
+                    className="r-del"
+                    confirmText={`「${company.name}」を削除します。登録されているメンバー(${count}名)とログインアカウントもすべて削除され、元に戻せません。よろしいですか？`}
+                  >
+                    削除
+                  </ConfirmSubmitButton>
+                </form>
               </div>
             ))
           )}
@@ -79,11 +89,4 @@ export default async function HqPage() {
           members={allMembers}
           step="02"
           title="全社横断ポートフォリオ"
-          subtitle="全社のメンバーを合算した才能構成です。"
-        />
-        <SummaryPanel members={allMembers} step="03" title="全社サマリー" />
-      </div>
-    </>
-  );
-}
-
+          subtitle="全社
