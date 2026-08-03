@@ -1,7 +1,7 @@
 "use client";
 
 import RadarChart from "./RadarChart";
-import { rankedOf } from "@/lib/talents";
+import { rankedOf, commentFor } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
 function RankTable({ scores }: { scores: TeamMember["scores"] }) {
@@ -79,6 +79,20 @@ export default function RosterPanel({
               <div className="roster-detail">
                 <RadarChart scores={m.scores} size={180} />
                 <RankTable scores={m.scores} />
+              </div>
+              <div className="strength-block">
+                <p className="field-group-title">TOP3の強み・向いている職種</p>
+                <div className="strength-grid">
+                  {top3.map((r, idx) => (
+                    <div className="strength-card" key={r.t.key}>
+                      <span className="strength-rank">TOP{idx + 1}</span>
+                      <h4>{r.t.name}</h4>
+                      <p className="def">{r.t.def}</p>
+                      <p className="comment">{commentFor(r.t, m.raw)}</p>
+                      <p className="roles"><strong>向いている職種例：</strong>{r.t.roles}</p>
+                    </div>
+                  ))}
+                </div>
               </div>
             </details>
           );
