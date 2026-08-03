@@ -106,7 +106,8 @@ export default function RosterPanel({
                 <RankTable scores={m.scores} />
               </div>
               <div className="strength-block">
-                <p className="field-group-title">適性タイプ(職務ポジションとの適合度)</p>
+                <p className="field-group-title">適性タイプ(5つの働き方の型・相対比較)</p>
+                <p className="fit-note">数値は5つの型の中での相対的な近さの目安です。数値が低い型があっても、その仕事が苦手・向いていないという意味ではありません。</p>
                 <div style={{ marginBottom: 16 }}>
                   {fits.map((f, idx) => (
                     <div className="coverage-row" key={f.name}>
