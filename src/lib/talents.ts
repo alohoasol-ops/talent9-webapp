@@ -203,3 +203,9 @@ export function fitScore(scores: TalentScores, weights: Record<TalentKey, number
   const sum = TALENTS.reduce((s, t) => s + (weights[t.key] || 0) * scores[t.key], 0);
   return Math.max(0, Math.min(100, (sum / (totalWeight * 100)) * 100));
 }
+
+export function presetFits(scores: TalentScores): { name: string; fit: number }[] {
+  return ROLE_PRESETS
+    .map((p) => ({ name: p.name, fit: fitScore(scores, p.weights) }))
+    .sort((a, b) => b.fit - a.fit);
+}
