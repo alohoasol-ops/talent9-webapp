@@ -34,6 +34,7 @@ export interface Talent {
   key: TalentKey;
   name: string;
   def: string;
+  roles: string;
   factors: TalentFactor[];
 }
 
@@ -41,6 +42,7 @@ export const TALENTS: Talent[] = [
   {
     key: "logic", name: "論理力",
     def: "物事を筋道立てて分析し、根拠に基づいて合理的な結論を導き出す力。",
+    roles: "エンジニア・研究者・コンサルタント・経理財務・戦略立案",
     factors: [
       { key: "fd", label: "FD優位傾向", weight: 0.5 },
       { key: "wp", label: "WP優位傾向", weight: 0.3 },
@@ -50,6 +52,7 @@ export const TALENTS: Talent[] = [
   {
     key: "create", name: "発想力",
     def: "既存の枠にとらわれず、新しいアイデアや発想を生み出す力。",
+    roles: "企画職・デザイナー・アーティスト・商品開発・起業家",
     factors: [
       { key: "ao", label: "AO優位傾向", weight: 0.6 },
       { key: "ea", label: "エモーションアクティブ", weight: 0.4 },
@@ -58,6 +61,7 @@ export const TALENTS: Talent[] = [
   {
     key: "empathy", name: "共感力",
     def: "相手の感情や立場を理解し、信頼関係を築く力。",
+    roles: "営業・カウンセラー・人事・接客サービス・教育",
     factors: [
       { key: "ce", label: "CE優位傾向", weight: 0.4 },
       { key: "ofc", label: "OFC傾向", weight: 0.3 },
@@ -67,6 +71,7 @@ export const TALENTS: Talent[] = [
   {
     key: "lead", name: "リーダー力",
     def: "目標を定め、周囲を巻き込みながら物事を前に進める力。",
+    roles: "経営者・プロジェクトマネージャー・営業リーダー",
     factors: [
       { key: "wp", label: "WP優位傾向", weight: 0.5 },
       { key: "solo", label: "Soloist傾向", weight: 0.3 },
@@ -76,6 +81,7 @@ export const TALENTS: Talent[] = [
   {
     key: "intro", name: "探究力",
     def: "物事の本質やなぜを深く掘り下げて考え続ける力。",
+    roles: "研究者・ライター・編集者・専門職・カウンセラー",
     factors: [
       { key: "ec", label: "エモーションコントロール", weight: 0.5 },
       { key: "acc", label: "ACC傾向", weight: 0.3 },
@@ -85,6 +91,7 @@ export const TALENTS: Talent[] = [
   {
     key: "expr", name: "伝達力",
     def: "言葉や文章、話し方などを通じて自分の考えや思いを人に伝える力。",
+    roles: "ライター・講師・広報PR・司会アナウンサー・営業",
     factors: [
       { key: "mpfc", label: "MPFC傾向", weight: 0.5 },
       { key: "ea", label: "エモーションアクティブ", weight: 0.3 },
@@ -94,6 +101,7 @@ export const TALENTS: Talent[] = [
   {
     key: "space", name: "デザイン力",
     def: "形・色・空間・レイアウトなどを視覚的に捉え、構成する力。",
+    roles: "デザイナー・建築家・映像写真・インテリア・設計エンジニア",
     factors: [
       { key: "ao", label: "AO優位傾向", weight: 0.7 },
       { key: "fd", label: "FD優位傾向", weight: 0.3 },
@@ -102,6 +110,7 @@ export const TALENTS: Talent[] = [
   {
     key: "body", name: "実践力",
     def: "体を動かし、手先や体感を通じて学び、実行する力。",
+    roles: "スポーツ選手・職人・料理人・理学療法士・ダンサー",
     factors: [
       { key: "wp", label: "WP優位傾向", weight: 0.4 },
       { key: "ao", label: "AO優位傾向", weight: 0.3 },
@@ -111,6 +120,7 @@ export const TALENTS: Talent[] = [
   {
     key: "order", name: "継続力",
     def: "計画的に物事を進め、地道な努力をコツコツと積み重ねる力。",
+    roles: "経理事務・品質管理・公務員・システム管理・伝統工芸",
     factors: [
       { key: "fd", label: "FD優位傾向", weight: 0.6 },
       { key: "ec", label: "エモーションコントロール", weight: 0.4 },
@@ -171,6 +181,22 @@ export const ROLE_PRESETS: { name: string; weights: Record<TalentKey, number> }[
   { name: "品質管理・オペレーション", weights: { order: 5, logic: 3, body: 3, intro: 1, empathy: 1, lead: 1, create: 1, expr: 1, space: 1 } },
   { name: "研究・専門職", weights: { intro: 5, logic: 4, space: 2, order: 2, empathy: 1, lead: 1, create: 1, expr: 1, body: 1 } },
 ];
+
+function descriptor(val: number): string {
+  if (val >= 75) return "非常に高く";
+  if (val >= 60) return "高く";
+  if (val >= 45) return "やや高く";
+  return "見られ";
+}
+
+export function commentFor(talent: Talent, rawInput: Partial<RawScores>): string {
+  const raw = sanitizeRaw(rawInput);
+  const extended: Record<string, number> = { ...raw, soloInv: 100 - raw.solo };
+  const sorted = [...talent.factors].sort((a, b) => extended[b.key] - extended[a.key]);
+  const top = sorted[0];
+  const val = Math.round(extended[top.key]);
+  return `${top.label}が${val}%と${descriptor(val)}、${talent.name}の背景要因になっていると考えられます。`;
+}
 
 export function fitScore(scores: TalentScores, weights: Record<TalentKey, number>): number {
   const totalWeight = TALENTS.reduce((s, t) => s + (weights[t.key] || 0), 0) || 1;
