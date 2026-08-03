@@ -259,11 +259,11 @@ export function relNormalize(scores: TalentScores): Record<TalentKey, number> {
 }
 
 export const ROLE_PRESETS: { name: string; weights: Record<TalentKey, number> }[] = [
-  { name: "リーダー候補", weights: { lead: 5, expr: 3, order: 3, empathy: 2, logic: 1, create: 1, intro: 1, space: 1, body: 1 } },
-  { name: "企画・新規事業", weights: { create: 5, space: 3, expr: 2, lead: 2, logic: 1, empathy: 1, intro: 1, order: 1, body: 1 } },
-  { name: "顧客対応・CS", weights: { empathy: 5, expr: 4, order: 2, lead: 1, logic: 1, create: 1, intro: 1, space: 1, body: 1 } },
-  { name: "品質管理・オペレーション", weights: { order: 5, logic: 3, body: 3, intro: 1, empathy: 1, lead: 1, create: 1, expr: 1, space: 1 } },
-  { name: "研究・専門職", weights: { intro: 5, logic: 4, space: 2, order: 2, empathy: 1, lead: 1, create: 1, expr: 1, body: 1 } },
+  { name: "けん引・推進タイプ", weights: { lead: 5, expr: 3, order: 3, empathy: 2, logic: 1, create: 1, intro: 1, space: 1, body: 1 } },
+  { name: "発想・企画タイプ", weights: { create: 5, space: 3, expr: 2, lead: 2, logic: 1, empathy: 1, intro: 1, order: 1, body: 1 } },
+  { name: "対人折衝タイプ", weights: { empathy: 5, expr: 4, order: 2, lead: 1, logic: 1, create: 1, intro: 1, space: 1, body: 1 } },
+  { name: "堅実運用タイプ", weights: { order: 5, logic: 3, body: 3, intro: 1, empathy: 1, lead: 1, create: 1, expr: 1, space: 1 } },
+  { name: "探究・専門タイプ", weights: { intro: 5, logic: 4, space: 2, order: 2, empathy: 1, lead: 1, create: 1, expr: 1, body: 1 } },
 ];
 
 function descriptor(val: number): string {
