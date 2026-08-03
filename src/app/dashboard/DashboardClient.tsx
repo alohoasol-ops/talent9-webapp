@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { computeScores, type RawScores } from "@/lib/talents";
 import type { TeamMember, DbTeamMemberRow } from "@/lib/types";
@@ -21,6 +21,20 @@ export default function DashboardClient({
   const [members, setMembers] = useState<TeamMember[]>(initialMembers);
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [printMemberId, setPrintMemberId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!printMemberId) return;
+    const timer = setTimeout(() => window.print(), 60);
+    function handleAfterPrint() {
+      setPrintMemberId(null);
+    }
+    window.addEventListener("afterprint", handleAfterPrint);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("afterprint", handleAfterPrint);
+    };
+  }, [printMemberId]);
 
   async function handleAdd(input: { name: string; date: string; raw: RawScores }) {
     setPending(true);
@@ -62,19 +76,32 @@ export default function DashboardClient({
 
   return (
     <>
-      <AddMemberPanel onAdd={handleAdd} pending={pending} />
-      {error && <p className="field-error">{error}</p>}
-      <RosterPanel members={members} onDelete={handleDelete} />
-      <PortfolioPanel members={members} />
-      <FitSimulatorPanel members={members} />
-      <SummaryPanel
-        members={members}
-        extraActions={
-          <div className="btn-row no-print">
-            <button type="button" className="primary" onClick={() => window.print()}>PDFとして保存(印刷)</button>
-          </div>
-        }
-      />
+      <div className="no-print">
+        <AddMemberPanel onAdd={handleAdd} pending={pending} />
+        {error && <p className="field-error">{error}</p>}
+      </div>
+      <div className={printMemberId ? "roster-print-single" : "no-print"}>
+        <RosterPanel
+          members={members}
+          onDelete={handleDelete}
+          onPrintMember={setPrintMemberId}
+          printTargetId={printMemberId}
+        />
+      </div>
+      <div className="no-print">
+        <PortfolioPanel members={members} />
+        <FitSimulatorPanel members={members} />
+      </div>
+      <div className={printMemberId ? "no-print" : undefined}>
+        <SummaryPanel
+          members={members}
+          extraActions={
+            <div className="btn-row no-print">
+              <button type="button" className="primary" onClick={() => window.print()}>PDFとして保存(印刷)</button>
+            </div>
+          }
+        />
+      </div>
     </>
   );
 }
