@@ -1,6 +1,7 @@
 "use client";
 
 import RadarChart from "./RadarChart";
+import PersonReportSections from "./PersonReportSections";
 import { rankedOf, commentFor, presetFits } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
@@ -107,6 +108,7 @@ export default function RosterPanel({
                   ))}
                 </div>
               </div>
+              <PersonReportSections member={m} />
             </details>
           );
         })
