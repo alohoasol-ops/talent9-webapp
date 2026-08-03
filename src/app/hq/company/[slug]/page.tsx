@@ -14,14 +14,14 @@ export default async function HqCompanyPage({
 }: {
   params: Promise<{ slug: string }>;
 }) {
-  const { slug } = await params;
+  const { slug: id } = await params;
   const profile = await requireHqAdmin();
   const supabase = await createClient();
 
   const { data: company } = await supabase
     .from("companies")
     .select("id, name, slug")
-    .eq("slug", slug)
+    .eq("id", id)
     .single();
 
   if (!company) notFound();
