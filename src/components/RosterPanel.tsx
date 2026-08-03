@@ -36,17 +36,21 @@ function RankTable({ scores }: { scores: TeamMember["scores"] }) {
 export default function RosterPanel({
   members,
   onDelete,
+  onPrintMember,
+  printTargetId,
   readOnly,
   step = "02",
 }: {
   members: TeamMember[];
   onDelete?: (id: string) => void;
+  onPrintMember?: (id: string) => void;
+  printTargetId?: string | null;
   readOnly?: boolean;
   step?: string;
 }) {
   return (
     <div className="panel">
-      <h2><span className="n">{step}</span>　チームメンバー一覧　<span className="mono">({members.length}名)</span></h2>
+      <h2 className="roster-title"><span className="n">{step}</span>　チームメンバー一覧　<span className="mono">({members.length}名)</span></h2>
       {members.length === 0 ? (
         <div className="empty-state">
           {readOnly ? "このチームにはまだメンバーが登録されていません。" : "まだメンバーが登録されていません。上の「メンバーを追加」からPDFを取り込んでください。"}
@@ -56,8 +60,13 @@ export default function RosterPanel({
           const top3 = rankedOf(m.scores).slice(0, 3);
           const fits = presetFits(m.scores);
           const bestFit = fits[0];
+          const isPrintTarget = printTargetId === m.id;
           return (
-            <details className="roster-item" key={m.id}>
+            <details
+              className={`roster-item${isPrintTarget ? " print-target" : ""}`}
+              open={isPrintTarget || undefined}
+              key={m.id}
+            >
               <summary>
                 <span className="r-name">{m.name || "(氏名未設定)"}</span>
                 <span className="r-date mono">{m.measuredDate || "－"}</span>
@@ -67,6 +76,18 @@ export default function RosterPanel({
                     <span className="chip" key={r.t.key}>{r.t.name} {r.score.toFixed(1)}</span>
                   ))}
                 </span>
+                {onPrintMember && (
+                  <button
+                    type="button"
+                    className="r-print no-print"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onPrintMember(m.id);
+                    }}
+                  >
+                    個人レポートを印刷
+                  </button>
+                )}
                 {!readOnly && onDelete && (
                   <button
                     type="button"
