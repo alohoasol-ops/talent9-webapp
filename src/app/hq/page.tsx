@@ -89,4 +89,10 @@ export default async function HqPage() {
           members={allMembers}
           step="02"
           title="全社横断ポートフォリオ"
-          subtitle="全社
+          subtitle="全社のメンバーを合算した才能構成です。"
+        />
+        <SummaryPanel members={allMembers} step="03" title="全社サマリー" />
+      </div>
+    </>
+  );
+}
