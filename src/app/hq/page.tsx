@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { requireHqAdmin } from "@/lib/auth";
-import { createClient } from "@/lib/supabase/server";
+import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { fromDbRow, type DbTeamMemberRow } from "@/lib/types";
 import { rankedOf } from "@/lib/talents";
 import Topbar from "@/components/Topbar";
 import PortfolioPanel from "@/components/PortfolioPanel";
 import SummaryPanel from "@/components/SummaryPanel";
 import ConfirmSubmitButton from "@/components/ConfirmSubmitButton";
+import ResetPasswordButton from "@/components/ResetPasswordButton";
 import { deleteCompanyAction } from "./actions";
 
 export default async function HqPage() {
   const profile = await requireHqAdmin();
   const supabase = await createClient();
+  const admin = createAdminClient();
 
   const { data: companies } = await supabase
     .from("companies")
@@ -23,6 +25,24 @@ export default async function HqPage() {
     .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at");
 
   const allMembers = ((memberRows as DbTeamMemberRow[] | null) || []).map(fromDbRow);
+
+  const { data: profileRows } = await supabase
+    .from("profiles")
+    .select("id, company_id")
+    .eq("role", "company_admin");
+
+  const { data: usersData } = await admin.auth.admin.listUsers({ perPage: 1000 });
+  const emailByUserId = new Map<string, string>();
+  (usersData?.users || []).forEach((u) => {
+    if (u.email) emailByUserId.set(u.id, u.email);
+  });
+  const emailByCompanyId = new Map<string, string>();
+  (profileRows || []).forEach((p) => {
+    if (p.company_id) {
+      const email = emailByUserId.get(p.id);
+      if (email) emailByCompanyId.set(p.company_id, email);
+    }
+  });
 
   const companyStats = (companies || []).map((c) => {
     const members = allMembers.filter((m) => m.companyId === c.id);
@@ -40,7 +60,7 @@ export default async function HqPage() {
           )
         )[0]
       : null;
-    return { company: c, count: members.length, topTalent: top?.t.name };
+    return { company: c, count: members.length, topTalent: top?.t.name, email: emailByCompanyId.get(c.id) };
   });
 
   return (
@@ -65,7 +85,7 @@ export default async function HqPage() {
           {companyStats.length === 0 ? (
             <div className="empty-state">まだ会社が登録されていません。「＋ 会社アカウントを新規作成」から追加してください。</div>
           ) : (
-            companyStats.map(({ company, count, topTalent }) => (
+            companyStats.map(({ company, count, topTalent, email }) => (
               <div className="company-row" key={company.id}>
                 <span className="c-name">
                   <Link href={`/hq/company/${company.id}`}>{company.name}</Link>
@@ -80,6 +100,10 @@ export default async function HqPage() {
                     削除
                   </ConfirmSubmitButton>
                 </form>
+                <div className="c-sub">
+                  <span className="mono">ID：{email ?? "不明"}</span>
+                  <ResetPasswordButton companyId={company.id} companyName={company.name} />
+                </div>
               </div>
             ))
           )}
