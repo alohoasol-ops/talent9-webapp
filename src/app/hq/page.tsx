@@ -3,6 +3,7 @@ import { requireHqAdmin } from "@/lib/auth";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { fromDbRow, type DbTeamMemberRow } from "@/lib/types";
 import { rankedOf } from "@/lib/talents";
+import { emailToLoginId } from "@/lib/slug";
 import Topbar from "@/components/Topbar";
 import PortfolioPanel from "@/components/PortfolioPanel";
 import SummaryPanel from "@/components/SummaryPanel";
@@ -101,7 +102,7 @@ export default async function HqPage() {
                   </ConfirmSubmitButton>
                 </form>
                 <div className="c-sub">
-                  <span className="mono">ID：{email ?? "不明"}</span>
+                  <span className="mono">ID：{email ? emailToLoginId(email) : "不明"}</span>
                   <ResetPasswordButton companyId={company.id} companyName={company.name} />
                 </div>
               </div>
