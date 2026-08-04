@@ -13,8 +13,8 @@ export default function LoginPage() {
         <p className="sub">会社アカウントまたは本部アカウントでログインしてください</p>
         <form action={formAction}>
           <div className="name-field">
-            <label htmlFor="email">メールアドレス</label>
-            <input id="email" name="email" type="email" autoComplete="username" required />
+            <label htmlFor="email">ログインID</label>
+            <input id="email" name="email" type="text" autoComplete="username" required />
           </div>
           <div className="name-field">
             <label htmlFor="password">パスワード</label>
