@@ -1,6 +1,7 @@
 import { requireCompanyAdmin } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
 import { fromDbRow, type DbTeamMemberRow } from "@/lib/types";
+import { emailToLoginId } from "@/lib/slug";
 import Topbar from "@/components/Topbar";
 import DashboardClient from "./DashboardClient";
 
@@ -24,7 +25,7 @@ export default async function DashboardPage() {
 
   return (
     <>
-      <Topbar roleLabel="会社アカウント" contextLabel={company?.name} email={profile.email} />
+      <Topbar roleLabel="会社アカウント" contextLabel={company?.name} email={profile.email ? emailToLoginId(profile.email) : profile.email} />
       <div className="shell">
         <header className="top">
           <h1 className="font-display">{company?.name || "チーム"} の9才能ポートフォリオ</h1>
