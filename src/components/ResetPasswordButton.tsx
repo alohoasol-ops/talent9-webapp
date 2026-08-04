@@ -10,7 +10,7 @@ export default function ResetPasswordButton({
   companyId: string;
   companyName: string;
 }) {
-  const [result, setResult] = useState<{ email: string; password: string } | null>(null);
+  const [result, setResult] = useState<{ loginId: string; password: string } | null>(null);
   const [pending, setPending] = useState(false);
 
   async function handleClick() {
@@ -34,8 +34,8 @@ export default function ResetPasswordButton({
     return (
       <div className="status-box ok" style={{ marginTop: 10 }}>
         新しいパスワードを発行しました(この場に一度だけ表示されます。安全な方法で会社担当者に伝えてください)。
-        <div className="field-group-title" style={{ marginTop: 8 }}>メールアドレス(ID)</div>
-        <p className="mono">{result.email}</p>
+        <div className="field-group-title" style={{ marginTop: 8 }}>ログインID</div>
+        <p className="mono">{result.loginId}</p>
         <div className="field-group-title">新しいパスワード</div>
         <p className="mono" style={{ fontSize: 16, fontWeight: 700 }}>{result.password}</p>
       </div>
