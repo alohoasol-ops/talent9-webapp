@@ -210,8 +210,16 @@ table.data td.name-cell{ font-weight:600; white-space:normal; min-width:100px; }
   .no-print{ display:none !important; }
   .two-col{ grid-template-columns:1fr; }
   .panel{ box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+  header.top{ margin-bottom:10px; }
+  header.top p, header.top .badge-row{ display:none !important; }
   .roster-print-single .roster-title,
   .roster-print-single .empty-state{ display:none !important; }
   .roster-print-single .roster-item:not(.print-target){ display:none !important; }
   .roster-print-single .roster-item.print-target{ border:none; }
+  .roster-print-single .panel{ break-inside:auto; }
+  .roster-print-single .strength-card,
+  .roster-print-single .compat-card,
+  .roster-print-single .motiv-box,
+  .roster-print-single table.data,
+  .roster-print-single table.goal-sheet{ break-inside:avoid; }
 }
