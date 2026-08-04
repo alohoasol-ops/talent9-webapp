@@ -14,7 +14,7 @@ export default function NewCompanyPage() {
     <div className="shell">
       <header className="top">
         <h1 className="font-display">会社アカウントを新規作成</h1>
-        <p>会社名と管理者(その会社を運用する担当者)のメールアドレスを登録します。初回パスワードは自動発行され、この画面に一度だけ表示されます。</p>
+        <p>会社名とログインID(本部が発行する、メールアドレス不要のID)を登録します。初回パスワードは自動発行され、この画面に一度だけ表示されます。</p>
       </header>
 
       <div className="panel" style={{ maxWidth: 480 }}>
@@ -26,8 +26,8 @@ export default function NewCompanyPage() {
             <div className="field-group">
               <p className="field-group-title">ログインURL</p>
               <p className="mono">/login</p>
-              <p className="field-group-title">メールアドレス(ID)</p>
-              <p className="mono">{state.success.adminEmail}</p>
+              <p className="field-group-title">ログインID</p>
+              <p className="mono">{state.success.loginId}</p>
               <p className="field-group-title">初回パスワード</p>
               <p className="mono" style={{ fontSize: 18, fontWeight: 700 }}>{state.success.adminPassword}</p>
             </div>
@@ -47,8 +47,8 @@ export default function NewCompanyPage() {
               <input id="adminName" name="adminName" type="text" placeholder="例：人事部 田中" />
             </div>
             <div className="name-field">
-              <label htmlFor="adminEmail">管理者メールアドレス(ログインID)</label>
-              <input id="adminEmail" name="adminEmail" type="email" required placeholder="admin@example.com" />
+              <label htmlFor="loginId">ログインID(半角英数字とハイフン、3文字以上)</label>
+              <input id="loginId" name="loginId" type="text" required placeholder="例：sample-company" pattern="[A-Za-z0-9-]{3,}" />
             </div>
             {state?.error && <p className="field-error">{state.error}</p>}
             <div className="btn-row">
