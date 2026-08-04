@@ -2,14 +2,14 @@
 
 import { requireHqAdmin } from "@/lib/auth";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import { slugify, randomPassword } from "@/lib/slug";
+import { slugify, sanitizeLoginId, loginIdToEmail, randomPassword } from "@/lib/slug";
 
 export interface CreateCompanyState {
   error?: string;
   success?: {
     companyName: string;
     slug: string;
-    adminEmail: string;
+    loginId: string;
     adminPassword: string;
   };
 }
@@ -22,10 +22,10 @@ export async function createCompanyAction(
 
   const companyName = String(formData.get("companyName") || "").trim();
   const adminName = String(formData.get("adminName") || "").trim();
-  const adminEmail = String(formData.get("adminEmail") || "").trim();
+  const loginId = sanitizeLoginId(String(formData.get("loginId") || ""));
 
-  if (!companyName || !adminEmail) {
-    return { error: "会社名と管理者メールアドレスは必須です。" };
+  if (!companyName || loginId.length < 3) {
+    return { error: "会社名と、3文字以上のログインID(半角英数字とハイフン)は必須です。" };
   }
 
   const supabase = await createClient();
@@ -46,7 +46,7 @@ export async function createCompanyAction(
   const password = randomPassword();
 
   const { data: userData, error: userError } = await admin.auth.admin.createUser({
-    email: adminEmail,
+    email: loginIdToEmail(loginId),
     password,
     email_confirm: true,
   });
@@ -54,7 +54,12 @@ export async function createCompanyAction(
   if (userError || !userData?.user) {
     // ロールバック: 会社だけ作られてユーザーが作れなかった場合は会社を削除しておく
     await supabase.from("companies").delete().eq("id", company.id);
-    return { error: `管理者アカウントの作成に失敗しました：${userError?.message || "unknown error"}` };
+    const isDuplicate = /already|registered|exists/i.test(userError?.message || "");
+    return {
+      error: isDuplicate
+        ? "このログインIDはすでに使われています。別のIDを指定してください。"
+        : `管理者アカウントの作成に失敗しました：${userError?.message || "unknown error"}`,
+    };
   }
 
   const { error: profileError } = await admin.from("profiles").insert({
@@ -72,7 +77,7 @@ export async function createCompanyAction(
     success: {
       companyName: company.name,
       slug: company.slug,
-      adminEmail,
+      loginId,
       adminPassword: password,
     },
   };
