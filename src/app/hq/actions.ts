@@ -2,7 +2,7 @@
 
 import { requireHqAdmin } from "@/lib/auth";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
-import { randomPassword } from "@/lib/slug";
+import { randomPassword, emailToLoginId } from "@/lib/slug";
 import { revalidatePath } from "next/cache";
 
 export async function deleteCompanyAction(companyId: string) {
@@ -26,7 +26,7 @@ export async function deleteCompanyAction(companyId: string) {
 
 export async function resetCompanyPasswordAction(
   companyId: string
-): Promise<{ email: string; password: string } | { error: string }> {
+): Promise<{ loginId: string; password: string } | { error: string }> {
   await requireHqAdmin();
   const supabase = await createClient();
   const admin = createAdminClient();
@@ -49,5 +49,5 @@ export async function resetCompanyPasswordAction(
     return { error: "パスワードの再発行に失敗しました。時間をおいて再度お試しください。" };
   }
 
-  return { email: userData.user.email, password };
+  return { loginId: emailToLoginId(userData.user.email), password };
 }
