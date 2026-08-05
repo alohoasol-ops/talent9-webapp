@@ -3,6 +3,19 @@
 import { rankedOf, TALENT_BY_KEY } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
+const TRUST_BUILDERS = [
+  { label: "認める", note: "結果が出る前から、相手の存在や取り組みそのものを肯定する" },
+  { label: "任せる", note: "手順を細かく管理せず、相手なりのやり方を尊重して委ねる" },
+  { label: "聴く", note: "話の途中で否定や反論をはさまず、最後まで受け止める" },
+  { label: "支える", note: "代わりにやるのではなく、困っている時に一緒に考える" },
+  { label: "伝える", note: "感じたことや良い変化を、言葉にしてきちんと本人に返す" },
+];
+
+const TRUST_ERODERS = [
+  { label: "コントロールしたい気持ち", note: "「こうあるべき」という期待を押しつけるほど、信頼は弱まる" },
+  { label: "疑う気持ち", note: "「本当に大丈夫か」という不安が強いほど、信頼は弱まる" },
+];
+
 export default function PersonReportSections({ member }: { member: TeamMember }) {
   const ranked = rankedOf(member.scores);
   const main = ranked[0].t;
@@ -51,6 +64,28 @@ export default function PersonReportSections({ member }: { member: TeamMember })
           <p className="motiv-item" key={tip}>{i + 1}. {tip}</p>
         ))}
       </div>
+
+      <p className="field-group-title">信頼を育てる5つの要素</p>
+      <div className="info-box" style={{ marginBottom: 10 }}>
+        信頼関係は足し算ではなく掛け算で育ちます。5つの要素がすべて揃って初めて強い信頼になり、どれか1つが欠けると、他がどれだけ高くても信頼全体が弱くなってしまいます。
+      </div>
+      <div className="two-col" style={{ marginBottom: 8 }}>
+        <div className="motiv-box motiv-up">
+          <p className="motiv-title">信頼を育てる5要素</p>
+          {TRUST_BUILDERS.map((b) => (
+            <p className="motiv-item" key={b.label}>▲ <strong>{b.label}</strong> — {b.note}</p>
+          ))}
+        </div>
+        <div className="motiv-box motiv-down">
+          <p className="motiv-title">信頼を弱める2つの要因</p>
+          {TRUST_ERODERS.map((e) => (
+            <p className="motiv-item" key={e.label}>▼ <strong>{e.label}</strong> — {e.note}</p>
+          ))}
+        </div>
+      </div>
+      <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginBottom: 18 }}>
+        5つの要素のうち、どれか1つでも欠けると信頼はゼロに近づきます。まずは1つだけでも意識して満たすことが、信頼構築の一番の近道です。
+      </p>
 
       <p className="field-group-title">個人目標 × 会社目標 接続シート(1on1テンプレート)</p>
       <div className="scroll-x">
