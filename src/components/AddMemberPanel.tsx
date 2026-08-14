@@ -5,7 +5,7 @@ import {
   DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES,
   type RawKey, type RawScores, type ExtraRawScores,
 } from "@/lib/talents";
-import { extractFromPdf } from "@/lib/pdfExtract";
+import { extractFromPdf, extractThinkingFromPdf } from "@/lib/pdfExtract";
 
 const FIELD_GROUPS: { title: string; keys: RawKey[] }[] = [
   { title: "パーソナルブレインスコア", keys: ["wp", "fd", "ao", "ce"] },
@@ -32,6 +32,7 @@ export default function AddMemberPanel({
   const [raw, setRaw] = useState<RawScores>({ ...DEFAULT_RAW });
   const [extraRaw, setExtraRaw] = useState<ExtraRawScores>({ ...DEFAULT_EXTRA_RAW });
   const [status, setStatus] = useState<{ kind: "ok" | "err"; text: string; meta?: string } | null>(null);
+  const [thinkingStatus, setThinkingStatus] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -40,6 +41,31 @@ export default function AddMemberPanel({
     setDate("");
     setRaw({ ...DEFAULT_RAW });
     setExtraRaw({ ...DEFAULT_EXTRA_RAW });
+    setThinkingStatus(null);
+  }
+
+  async function handleThinkingFile(file: File | undefined | null) {
+    if (!file) return;
+    if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+      setThinkingStatus({ kind: "err", text: "PDFファイルを選択してください。" });
+      return;
+    }
+    setThinkingStatus({ kind: "ok", text: "PDFを解析しています…" });
+    try {
+      const result = await extractThinkingFromPdf(file);
+      if (result.missing.length > 2) {
+        setThinkingStatus({
+          kind: "err",
+          text: "このPDFから数値を読み取れませんでした。「池川チームロールアセスメント」の結果シートと異なる形式の可能性があります。数値を直接入力してください。",
+        });
+        return;
+      }
+      setExtraRaw((prev) => ({ ...prev, ...result.values }));
+      setThinkingStatus({ kind: "ok", text: "読み込み完了。下の数値を確認してください。" });
+    } catch (err) {
+      console.error(err);
+      setThinkingStatus({ kind: "err", text: "PDFの解析に失敗しました。数値を直接入力してください。" });
+    }
   }
 
   async function handleFile(file: File | undefined | null) {
@@ -170,6 +196,20 @@ export default function AddMemberPanel({
 
             <div className="field-group">
               <p className="field-group-title">思考タイプ(任意・合計100%目安)</p>
+              <label className="btn" style={{ display: "inline-block", marginBottom: 10, fontSize: 12.5, cursor: "pointer" }}>
+                池川チームロールアセスメントの結果PDFを読み込む
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => handleThinkingFile(e.target.files?.[0])}
+                  style={{ display: "none" }}
+                />
+              </label>
+              {thinkingStatus && (
+                <div className={`status-box ${thinkingStatus.kind}`} style={{ marginBottom: 10 }}>
+                  {thinkingStatus.text}
+                </div>
+              )}
               {THINKING_TYPES.map((t) => (
                 <div className="field-row" key={t.key}>
                   <label htmlFor={`m-${t.key}`}>{t.name}</label>
