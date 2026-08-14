@@ -21,6 +21,67 @@ export const DEFAULT_RAW: RawScores = {
   wp: 40, fd: 35, ao: 45, ce: 30, ea: 50, ec: 60, acc: 35, mpfc: 70, ofc: 50, solo: 45,
 };
 
+export type ThinkingKey = "scrutiny" | "steady" | "coop" | "idea";
+export type SenseKey = "visual" | "auditory" | "tactile";
+
+export interface ExtraRawScores {
+  scrutiny: number;
+  steady: number;
+  coop: number;
+  idea: number;
+  visual: number;
+  auditory: number;
+  tactile: number;
+}
+
+export const THINKING_KEYS: ThinkingKey[] = ["scrutiny", "steady", "coop", "idea"];
+export const SENSE_KEYS: SenseKey[] = ["visual", "auditory", "tactile"];
+
+export const DEFAULT_EXTRA_RAW: ExtraRawScores = {
+  scrutiny: 0, steady: 0, coop: 0, idea: 0, visual: 0, auditory: 0, tactile: 0,
+};
+
+export interface ThinkingType {
+  key: ThinkingKey;
+  name: string;
+  def: string;
+}
+
+export const THINKING_TYPES: ThinkingType[] = [
+  { key: "scrutiny", name: "精査型", def: "物事を丁寧に調べ、根拠や仕組みに納得してから動くタイプ。じっくり考える時間があるほど力を発揮します。" },
+  { key: "steady", name: "堅実型", def: "決まった手順やルールを大切にし、リスクを避けながら着実に進めるタイプ。見通しが立つと安心して力を発揮します。" },
+  { key: "coop", name: "協調型", def: "周囲との関係性を大切にし、人との一体感や評価の中でモチベーションが高まるタイプ。" },
+  { key: "idea", name: "着想型", def: "新しいものや変化に興味を持ち、発想力を活かして素早く判断するタイプ。好奇心が原動力になります。" },
+];
+
+export interface SenseType {
+  key: SenseKey;
+  name: string;
+  def: string;
+}
+
+export const SENSE_TYPES: SenseType[] = [
+  { key: "visual", name: "視覚型", def: "見る・読むことで理解が進むタイプ。図やグラフ、文字情報があると納得しやすくなります。" },
+  { key: "auditory", name: "聴覚型", def: "聞く・話すことで理解が進むタイプ。説明を耳で聞いたり、声に出して確認すると定着しやすくなります。" },
+  { key: "tactile", name: "体感型", def: "まず触れる・やってみることで理解が進むタイプ。実際に体を動かしながら覚えるのが得意です。" },
+];
+
+export function hasExtraData(keys: (ThinkingKey | SenseKey)[], raw: Partial<ExtraRawScores>): boolean {
+  return keys.some((k) => Number(raw[k] ?? 0) > 0);
+}
+
+export function rankedThinking(raw: Partial<ExtraRawScores>) {
+  return THINKING_TYPES
+    .map((t) => ({ t, value: Number(raw[t.key] ?? 0) }))
+    .sort((a, b) => b.value - a.value);
+}
+
+export function rankedSense(raw: Partial<ExtraRawScores>) {
+  return SENSE_TYPES
+    .map((t) => ({ t, value: Number(raw[t.key] ?? 0) }))
+    .sort((a, b) => b.value - a.value);
+}
+
 export type TalentKey =
   | "logic" | "create" | "empathy" | "lead" | "intro" | "expr" | "space" | "body" | "order";
 
