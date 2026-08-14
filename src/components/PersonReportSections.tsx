@@ -2,7 +2,7 @@
 
 import {
   rankedOf, TALENT_BY_KEY,
-  THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense,
+  THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight,
 } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
@@ -29,6 +29,7 @@ export default function PersonReportSections({ member }: { member: TeamMember })
   const showSense = hasExtraData(SENSE_KEYS, member.raw);
   const thinking = showThinking ? rankedThinking(member.raw) : [];
   const sense = showSense ? rankedSense(member.raw) : [];
+  const insight = showThinking && showSense ? combinedInsight(main, thinking[0].t, sense[0].t) : null;
 
   return (
     <div className="strength-block">
@@ -69,6 +70,23 @@ export default function PersonReportSections({ member }: { member: TeamMember })
                 <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>{sense[0]?.t.def}</p>
               </div>
             )}
+          </div>
+        </>
+      )}
+
+      {insight && (
+        <>
+          <p className="field-group-title">統合分析：強み・適職とその理由</p>
+          <div className="info-box" style={{ marginBottom: 8 }}>{insight.strength}</div>
+          <div className="strength-grid" style={{ marginBottom: 18 }}>
+            <div className="strength-card">
+              <span className="strength-rank">強みの理由</span>
+              <p className="comment" style={{ marginTop: 6 }}>{insight.reason}</p>
+            </div>
+            <div className="strength-card">
+              <span className="strength-rank">適職</span>
+              <p className="comment" style={{ marginTop: 6 }}>{insight.roleFit}</p>
+            </div>
           </div>
         </>
       )}
