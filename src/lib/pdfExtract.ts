@@ -1,6 +1,6 @@
 "use client";
 
-import type { RawKey, ThinkingKey } from "./talents";
+import type { RawKey, ThinkingKey, SenseKey } from "./talents";
 
 // 池川ブレインアセスメント(一般成人用)結果シート 1ページ目の固定レイアウト座標。
 // ラベル文字が画像として描画されておりテキスト抽出できないため、数値の座標位置で判定する。
@@ -26,6 +26,13 @@ const THINKING_ZONES: { key: ThinkingKey; yMin: number; yMax: number; xMin: numb
   { key: "idea", yMin: 105, yMax: 155, xMin: 460, xMax: 590 }, // コンセプト型(右)
 ];
 
+// 池川センスチャネルアセスメント(一般成人用)結果シートの固定レイアウト座標。
+const SENSE_ZONES: { key: SenseKey; yMin: number; yMax: number; xMin: number; xMax: number }[] = [
+  { key: "visual", yMin: 330, yMax: 385, xMin: 440, xMax: 580 }, // 視覚優先脳(上)
+  { key: "auditory", yMin: 155, yMax: 210, xMin: 280, xMax: 420 }, // 聴覚優先脳(左下)
+  { key: "tactile", yMin: 155, yMax: 210, xMin: 460, xMax: 590 }, // 皮膚感覚優先脳(右下)
+];
+
 export interface PdfExtractResult {
   values: Partial<Record<RawKey, number>>;
   missing: RawKey[];
@@ -36,6 +43,13 @@ export interface PdfExtractResult {
 export interface ThinkingExtractResult {
   values: Partial<Record<ThinkingKey, number>>;
   missing: ThinkingKey[];
+  name: string;
+  date: string;
+}
+
+export interface SenseExtractResult {
+  values: Partial<Record<SenseKey, number>>;
+  missing: SenseKey[];
   name: string;
   date: string;
 }
@@ -112,6 +126,21 @@ export async function extractThinkingFromPdf(file: File): Promise<ThinkingExtrac
   const values: Partial<Record<ThinkingKey, number>> = {};
   const missing: ThinkingKey[] = [];
   THINKING_ZONES.forEach((z) => {
+    const v = extractZoneValue(items, z);
+    if (v === null) missing.push(z.key);
+    else values[z.key] = v;
+  });
+
+  const meta = extractMeta(items);
+  return { values, missing, name: meta.name, date: meta.date };
+}
+
+export async function extractSenseFromPdf(file: File): Promise<SenseExtractResult> {
+  const items = await getPageTextItems(file);
+
+  const values: Partial<Record<SenseKey, number>> = {};
+  const missing: SenseKey[] = [];
+  SENSE_ZONES.forEach((z) => {
     const v = extractZoneValue(items, z);
     if (v === null) missing.push(z.key);
     else values[z.key] = v;
