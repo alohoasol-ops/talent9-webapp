@@ -1,6 +1,9 @@
 "use client";
 
-import { rankedOf, TALENT_BY_KEY } from "@/lib/talents";
+import {
+  rankedOf, TALENT_BY_KEY,
+  THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense,
+} from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
 const TRUST_BUILDERS = [
@@ -22,6 +25,10 @@ export default function PersonReportSections({ member }: { member: TeamMember })
   const sub = ranked[1].t;
   const complementTalent = TALENT_BY_KEY[main.compatibility.complement];
   const tensionTalent = TALENT_BY_KEY[main.compatibility.tension];
+  const showThinking = hasExtraData(THINKING_KEYS, member.raw);
+  const showSense = hasExtraData(SENSE_KEYS, member.raw);
+  const thinking = showThinking ? rankedThinking(member.raw) : [];
+  const sense = showSense ? rankedSense(member.raw) : [];
 
   return (
     <div className="strength-block">
@@ -31,6 +38,40 @@ export default function PersonReportSections({ member }: { member: TeamMember })
         <div className="stat-card"><div className="stat-n" style={{ fontSize: 16 }}>{sub.name}</div><div className="stat-l">サブ才能</div></div>
       </div>
       <div className="info-box" style={{ marginBottom: 18 }}>{main.essence}</div>
+
+      {(showThinking || showSense) && (
+        <>
+          <p className="field-group-title">思考タイプ・感覚チャンネル</p>
+          <div className="two-col" style={{ marginBottom: 18 }}>
+            {showThinking && (
+              <div>
+                <p className="motiv-title" style={{ marginBottom: 8 }}>思考タイプ</p>
+                {thinking.map((r, idx) => (
+                  <div className="coverage-row" key={r.t.key}>
+                    <span className="cov-label">{idx === 0 && "★ "}{r.t.name}</span>
+                    <div className="cov-track"><div className="cov-fill" style={{ width: `${r.value}%` }} /></div>
+                    <span className="cov-n">{r.value.toFixed(0)}%</span>
+                  </div>
+                ))}
+                <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>{thinking[0]?.t.def}</p>
+              </div>
+            )}
+            {showSense && (
+              <div>
+                <p className="motiv-title" style={{ marginBottom: 8 }}>感覚チャンネル</p>
+                {sense.map((r, idx) => (
+                  <div className="coverage-row" key={r.t.key}>
+                    <span className="cov-label">{idx === 0 && "★ "}{r.t.name}</span>
+                    <div className="cov-track"><div className="cov-fill" style={{ width: `${r.value}%` }} /></div>
+                    <span className="cov-n">{r.value.toFixed(0)}%</span>
+                  </div>
+                ))}
+                <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>{sense[0]?.t.def}</p>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       <p className="field-group-title">モチベーション要因</p>
       <div className="two-col" style={{ marginBottom: 18 }}>
