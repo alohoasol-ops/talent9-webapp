@@ -254,7 +254,7 @@ export default function AddMemberPanel({
             ))}
 
             <div className="field-group">
-              <p className="field-group-title">思考タイプ(任意・合計100%目安)</p>
+              <p className="field-group-title">思考スタイル(任意・合計100%目安)</p>
               <label className="btn" style={{ display: "inline-block", marginBottom: 10, fontSize: 12.5, cursor: "pointer" }}>
                 池川チームロールアセスメントの結果PDFを読み込む
                 <input
