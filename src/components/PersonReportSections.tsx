@@ -2,7 +2,7 @@
 
 import {
   rankedOf, TALENT_BY_KEY,
-  THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight,
+  THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
 } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
@@ -30,6 +30,7 @@ export default function PersonReportSections({ member }: { member: TeamMember })
   const thinking = showThinking ? rankedThinking(member.raw) : [];
   const sense = showSense ? rankedSense(member.raw) : [];
   const insight = showThinking && showSense ? combinedInsight(main, thinking[0].t, sense[0].t) : null;
+  const comm = showThinking && showSense ? communicationInsight(thinking[0].t, sense[0].t) : null;
 
   return (
     <div className="strength-block">
@@ -86,6 +87,22 @@ export default function PersonReportSections({ member }: { member: TeamMember })
             <div className="strength-card">
               <span className="strength-rank">適職</span>
               <p className="comment" style={{ marginTop: 6 }}>{insight.roleFit}</p>
+            </div>
+          </div>
+        </>
+      )}
+
+      {comm && (
+        <>
+          <p className="field-group-title">コミュニケーションの取り方</p>
+          <div className="two-col" style={{ marginBottom: 18 }}>
+            <div className="motiv-box motiv-up">
+              <p className="motiv-title">この人の特徴</p>
+              {comm.traits.map((t) => <p className="motiv-item" key={t}>・{t}</p>)}
+            </div>
+            <div className="motiv-box motiv-up">
+              <p className="motiv-title">接し方のヒント</p>
+              {comm.advice.map((a) => <p className="motiv-item" key={a}>・{a}</p>)}
             </div>
           </div>
         </>
