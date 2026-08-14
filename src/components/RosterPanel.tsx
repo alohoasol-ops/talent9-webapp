@@ -37,6 +37,7 @@ export default function RosterPanel({
   members,
   onDelete,
   onPrintMember,
+  onEditMember,
   printTargetId,
   readOnly,
   step = "02",
@@ -44,6 +45,7 @@ export default function RosterPanel({
   members: TeamMember[];
   onDelete?: (id: string) => void;
   onPrintMember?: (id: string) => void;
+  onEditMember?: (id: string) => void;
   printTargetId?: string | null;
   readOnly?: boolean;
   step?: string;
@@ -86,6 +88,18 @@ export default function RosterPanel({
                     }}
                   >
                     個人レポートを印刷
+                  </button>
+                )}
+                {!readOnly && onEditMember && (
+                  <button
+                    type="button"
+                    className="r-print no-print"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onEditMember(m.id);
+                    }}
+                  >
+                    編集
                   </button>
                 )}
                 {!readOnly && onDelete && (
