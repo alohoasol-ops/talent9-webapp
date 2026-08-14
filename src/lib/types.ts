@@ -1,11 +1,11 @@
-import type { RawScores, TalentScores } from "./talents";
+import type { ExtraRawScores, RawScores, TalentScores } from "./talents";
 
 export interface TeamMember {
   id: string;
   companyId: string;
   name: string;
   measuredDate: string | null;
-  raw: RawScores;
+  raw: RawScores & Partial<ExtraRawScores>;
   scores: TalentScores;
   createdAt: string;
 }
@@ -15,7 +15,7 @@ export interface DbTeamMemberRow {
   company_id: string;
   name: string;
   measured_date: string | null;
-  raw_scores: RawScores;
+  raw_scores: RawScores & Partial<ExtraRawScores>;
   talent_scores: TalentScores;
   created_at: string;
 }
