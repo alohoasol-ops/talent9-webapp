@@ -1,11 +1,12 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES,
   type RawKey, type RawScores, type ExtraRawScores,
 } from "@/lib/talents";
 import { extractFromPdf, extractThinkingFromPdf, extractSenseFromPdf } from "@/lib/pdfExtract";
+import type { TeamMember } from "@/lib/types";
 
 const FIELD_GROUPS: { title: string; keys: RawKey[] }[] = [
   { title: "パーソナルブレインスコア", keys: ["wp", "fd", "ao", "ce"] },
@@ -22,9 +23,15 @@ const FIELD_LABELS: Record<RawKey, string> = {
 export default function AddMemberPanel({
   onAdd,
   pending,
+  editingMember,
+  onUpdate,
+  onCancelEdit,
 }: {
   onAdd: (input: { name: string; date: string; raw: RawScores & Partial<ExtraRawScores> }) => Promise<void> | void;
   pending?: boolean;
+  editingMember?: TeamMember | null;
+  onUpdate?: (id: string, input: { name: string; date: string; raw: RawScores & Partial<ExtraRawScores> }) => Promise<void> | void;
+  onCancelEdit?: () => void;
 }) {
   const [manualOpen, setManualOpen] = useState(false);
   const [name, setName] = useState("");
@@ -36,6 +43,18 @@ export default function AddMemberPanel({
   const [senseStatus, setSenseStatus] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (!editingMember) return;
+    setName(editingMember.name || "");
+    setDate(editingMember.measuredDate || "");
+    setRaw({ ...DEFAULT_RAW, ...editingMember.raw });
+    setExtraRaw({ ...DEFAULT_EXTRA_RAW, ...editingMember.raw });
+    setManualOpen(true);
+    setStatus(null);
+    setThinkingStatus(null);
+    setSenseStatus(null);
+  }, [editingMember]);
 
   function resetForm() {
     setName("");
@@ -137,15 +156,29 @@ export default function AddMemberPanel({
   }
 
   async function handleAdd() {
+    if (editingMember && onUpdate) {
+      await onUpdate(editingMember.id, { name, date, raw: { ...raw, ...extraRaw } });
+      return;
+    }
     await onAdd({ name, date, raw: { ...raw, ...extraRaw } });
     resetForm();
     setStatus(null);
   }
 
+  function handleCancelEdit() {
+    resetForm();
+    setManualOpen(false);
+    onCancelEdit?.();
+  }
+
   return (
     <div className="panel no-print">
-      <h2><span className="n">01</span>　メンバーを追加</h2>
-      <p className="panel-sub">結果PDFを1人分ずつ取り込み、内容を確認してからチームに追加してください。</p>
+      <h2><span className="n">01</span>　{editingMember ? `メンバーを編集：${editingMember.name || "(氏名未設定)"}` : "メンバーを追加"}</h2>
+      <p className="panel-sub">
+        {editingMember
+          ? "追加でPDFを読み込むか、数値を直接編集して「保存する」を押してください。"
+          : "結果PDFを1人分ずつ取り込み、内容を確認してからチームに追加してください。"}
+      </p>
 
       <div className="two-col">
         <div>
@@ -196,107 +229,3 @@ export default function AddMemberPanel({
                 <label htmlFor="m-date">測定日</label>
                 <input id="m-date" type="date" value={date} onChange={(e) => setDate(e.target.value)} />
               </div>
-            </div>
-
-            {FIELD_GROUPS.map((g) => (
-              <div className="field-group" key={g.title}>
-                <p className="field-group-title">{g.title}</p>
-                {g.keys.map((k) => (
-                  <div className="field-row" key={k}>
-                    <label htmlFor={`m-${k}`}>{FIELD_LABELS[k]}</label>
-                    <div className="input-wrap">
-                      <input
-                        id={`m-${k}`}
-                        type="number"
-                        min={0}
-                        max={100}
-                        value={raw[k]}
-                        onChange={(e) => setRaw((prev) => ({ ...prev, [k]: Number(e.target.value) }))}
-                      />
-                      <span className="pct">%</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            ))}
-
-            <div className="field-group">
-              <p className="field-group-title">思考タイプ(任意・合計100%目安)</p>
-              <label className="btn" style={{ display: "inline-block", marginBottom: 10, fontSize: 12.5, cursor: "pointer" }}>
-                池川チームロールアセスメントの結果PDFを読み込む
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(e) => handleThinkingFile(e.target.files?.[0])}
-                  style={{ display: "none" }}
-                />
-              </label>
-              {thinkingStatus && (
-                <div className={`status-box ${thinkingStatus.kind}`} style={{ marginBottom: 10 }}>
-                  {thinkingStatus.text}
-                </div>
-              )}
-              {THINKING_TYPES.map((t) => (
-                <div className="field-row" key={t.key}>
-                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
-                  <div className="input-wrap">
-                    <input
-                      id={`m-${t.key}`}
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={extraRaw[t.key]}
-                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
-                    />
-                    <span className="pct">%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="field-group">
-              <p className="field-group-title">感覚チャンネル(任意・合計100%目安)</p>
-              <label className="btn" style={{ display: "inline-block", marginBottom: 10, fontSize: 12.5, cursor: "pointer" }}>
-                池川センスチャネルアセスメントの結果PDFを読み込む
-                <input
-                  type="file"
-                  accept="application/pdf"
-                  onChange={(e) => handleSenseFile(e.target.files?.[0])}
-                  style={{ display: "none" }}
-                />
-              </label>
-              {senseStatus && (
-                <div className={`status-box ${senseStatus.kind}`} style={{ marginBottom: 10 }}>
-                  {senseStatus.text}
-                </div>
-              )}
-              {SENSE_TYPES.map((t) => (
-                <div className="field-row" key={t.key}>
-                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
-                  <div className="input-wrap">
-                    <input
-                      id={`m-${t.key}`}
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={extraRaw[t.key]}
-                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
-                    />
-                    <span className="pct">%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="btn-row">
-              <button type="button" className="primary" onClick={handleAdd} disabled={pending}>
-                {pending ? "追加中…" : "＋ チームに追加"}
-              </button>
-              <button type="button" onClick={resetForm}>フォームをクリア</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
