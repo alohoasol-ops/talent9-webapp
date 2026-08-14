@@ -41,11 +41,11 @@ export default function PersonReportSections({ member }: { member: TeamMember })
 
       {(showThinking || showSense) && (
         <>
-          <p className="field-group-title">思考タイプ・感覚チャンネル</p>
+          <p className="field-group-title">思考スタイル・感覚チャンネル</p>
           <div className="two-col" style={{ marginBottom: 18 }}>
             {showThinking && (
               <div>
-                <p className="motiv-title" style={{ marginBottom: 8 }}>思考タイプ</p>
+                <p className="motiv-title" style={{ marginBottom: 8 }}>思考スタイル</p>
                 {thinking.map((r, idx) => (
                   <div className="coverage-row" key={r.t.key}>
                     <span className="cov-label">{idx === 0 && "★ "}{r.t.name}</span>
