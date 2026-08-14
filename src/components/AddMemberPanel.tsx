@@ -5,7 +5,7 @@ import {
   DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES,
   type RawKey, type RawScores, type ExtraRawScores,
 } from "@/lib/talents";
-import { extractFromPdf, extractThinkingFromPdf } from "@/lib/pdfExtract";
+import { extractFromPdf, extractThinkingFromPdf, extractSenseFromPdf } from "@/lib/pdfExtract";
 
 const FIELD_GROUPS: { title: string; keys: RawKey[] }[] = [
   { title: "パーソナルブレインスコア", keys: ["wp", "fd", "ao", "ce"] },
@@ -33,6 +33,7 @@ export default function AddMemberPanel({
   const [extraRaw, setExtraRaw] = useState<ExtraRawScores>({ ...DEFAULT_EXTRA_RAW });
   const [status, setStatus] = useState<{ kind: "ok" | "err"; text: string; meta?: string } | null>(null);
   const [thinkingStatus, setThinkingStatus] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
+  const [senseStatus, setSenseStatus] = useState<{ kind: "ok" | "err"; text: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -42,6 +43,7 @@ export default function AddMemberPanel({
     setRaw({ ...DEFAULT_RAW });
     setExtraRaw({ ...DEFAULT_EXTRA_RAW });
     setThinkingStatus(null);
+    setSenseStatus(null);
   }
 
   async function handleThinkingFile(file: File | undefined | null) {
@@ -65,6 +67,30 @@ export default function AddMemberPanel({
     } catch (err) {
       console.error(err);
       setThinkingStatus({ kind: "err", text: "PDFの解析に失敗しました。数値を直接入力してください。" });
+    }
+  }
+
+  async function handleSenseFile(file: File | undefined | null) {
+    if (!file) return;
+    if (file.type !== "application/pdf" && !/\.pdf$/i.test(file.name)) {
+      setSenseStatus({ kind: "err", text: "PDFファイルを選択してください。" });
+      return;
+    }
+    setSenseStatus({ kind: "ok", text: "PDFを解析しています…" });
+    try {
+      const result = await extractSenseFromPdf(file);
+      if (result.missing.length > 1) {
+        setSenseStatus({
+          kind: "err",
+          text: "このPDFから数値を読み取れませんでした。「池川センスチャネルアセスメント」の結果シートと異なる形式の可能性があります。数値を直接入力してください。",
+        });
+        return;
+      }
+      setExtraRaw((prev) => ({ ...prev, ...result.values }));
+      setSenseStatus({ kind: "ok", text: "読み込み完了。下の数値を確認してください。" });
+    } catch (err) {
+      console.error(err);
+      setSenseStatus({ kind: "err", text: "PDFの解析に失敗しました。数値を直接入力してください。" });
     }
   }
 
@@ -205,58 +231,3 @@ export default function AddMemberPanel({
                   style={{ display: "none" }}
                 />
               </label>
-              {thinkingStatus && (
-                <div className={`status-box ${thinkingStatus.kind}`} style={{ marginBottom: 10 }}>
-                  {thinkingStatus.text}
-                </div>
-              )}
-              {THINKING_TYPES.map((t) => (
-                <div className="field-row" key={t.key}>
-                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
-                  <div className="input-wrap">
-                    <input
-                      id={`m-${t.key}`}
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={extraRaw[t.key]}
-                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
-                    />
-                    <span className="pct">%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="field-group">
-              <p className="field-group-title">感覚チャンネル(任意・合計100%目安)</p>
-              {SENSE_TYPES.map((t) => (
-                <div className="field-row" key={t.key}>
-                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
-                  <div className="input-wrap">
-                    <input
-                      id={`m-${t.key}`}
-                      type="number"
-                      min={0}
-                      max={100}
-                      value={extraRaw[t.key]}
-                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
-                    />
-                    <span className="pct">%</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="btn-row">
-              <button type="button" className="primary" onClick={handleAdd} disabled={pending}>
-                {pending ? "追加中…" : "＋ チームに追加"}
-              </button>
-              <button type="button" onClick={resetForm}>フォームをクリア</button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
