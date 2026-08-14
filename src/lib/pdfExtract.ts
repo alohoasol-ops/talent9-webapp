@@ -1,6 +1,6 @@
 "use client";
 
-import type { RawKey } from "./talents";
+import type { RawKey, ThinkingKey } from "./talents";
 
 // 池川ブレインアセスメント(一般成人用)結果シート 1ページ目の固定レイアウト座標。
 // ラベル文字が画像として描画されておりテキスト抽出できないため、数値の座標位置で判定する。
@@ -17,9 +17,25 @@ const PDF_ZONES: { key: RawKey; yMin: number; yMax: number; xMin: number; xMax: 
   { key: "solo", yMin: 63, yMax: 84, xMin: 150, xMax: 260 },
 ];
 
+// 池川チームロールアセスメント(一般成人用)結果シートの固定レイアウト座標。
+// こちらもラベル文字が画像として描画されておりテキスト抽出できないため、数値の座標位置で判定する。
+const THINKING_ZONES: { key: ThinkingKey; yMin: number; yMax: number; xMin: number; xMax: number }[] = [
+  { key: "scrutiny", yMin: 220, yMax: 270, xMin: 400, xMax: 560 }, // 分析型(上)
+  { key: "steady", yMin: 45, yMax: 95, xMin: 400, xMax: 560 }, // 構造型(下)
+  { key: "coop", yMin: 105, yMax: 155, xMin: 260, xMax: 390 }, // 社交型(左)
+  { key: "idea", yMin: 105, yMax: 155, xMin: 460, xMax: 590 }, // コンセプト型(右)
+];
+
 export interface PdfExtractResult {
   values: Partial<Record<RawKey, number>>;
   missing: RawKey[];
+  name: string;
+  date: string;
+}
+
+export interface ThinkingExtractResult {
+  values: Partial<Record<ThinkingKey, number>>;
+  missing: ThinkingKey[];
   name: string;
   date: string;
 }
@@ -29,7 +45,14 @@ interface TextItemLike {
   transform: number[];
 }
 
-function extractZoneValue(items: TextItemLike[], zone: (typeof PDF_ZONES)[number]): number | null {
+interface ZoneLike {
+  yMin: number;
+  yMax: number;
+  xMin: number;
+  xMax: number;
+}
+
+function extractZoneValue(items: TextItemLike[], zone: ZoneLike): number | null {
   const candidates = items.filter((it) => {
     const s = it.str.trim();
     if (!/^\d{1,3}$/.test(s)) return false;
@@ -54,7 +77,7 @@ function extractMeta(items: TextItemLike[]): { name: string; date: string } {
   return { name, date };
 }
 
-export async function extractFromPdf(file: File): Promise<PdfExtractResult> {
+async function getPageTextItems(file: File): Promise<TextItemLike[]> {
   const pdfjsLib = await import("pdfjs-dist");
   pdfjsLib.GlobalWorkerOptions.workerSrc = new URL(
     "pdfjs-dist/build/pdf.worker.min.mjs",
@@ -65,11 +88,30 @@ export async function extractFromPdf(file: File): Promise<PdfExtractResult> {
   const doc = await pdfjsLib.getDocument({ data: buf }).promise;
   const page = await doc.getPage(1);
   const content = await page.getTextContent();
-  const items = content.items as unknown as TextItemLike[];
+  return content.items as unknown as TextItemLike[];
+}
+
+export async function extractFromPdf(file: File): Promise<PdfExtractResult> {
+  const items = await getPageTextItems(file);
 
   const values: Partial<Record<RawKey, number>> = {};
   const missing: RawKey[] = [];
   PDF_ZONES.forEach((z) => {
+    const v = extractZoneValue(items, z);
+    if (v === null) missing.push(z.key);
+    else values[z.key] = v;
+  });
+
+  const meta = extractMeta(items);
+  return { values, missing, name: meta.name, date: meta.date };
+}
+
+export async function extractThinkingFromPdf(file: File): Promise<ThinkingExtractResult> {
+  const items = await getPageTextItems(file);
+
+  const values: Partial<Record<ThinkingKey, number>> = {};
+  const missing: ThinkingKey[] = [];
+  THINKING_ZONES.forEach((z) => {
     const v = extractZoneValue(items, z);
     if (v === null) missing.push(z.key);
     else values[z.key] = v;
