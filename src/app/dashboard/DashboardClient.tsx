@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { computeScores, type RawScores } from "@/lib/talents";
+import { computeScores, type RawScores, type ExtraRawScores } from "@/lib/talents";
 import type { TeamMember, DbTeamMemberRow } from "@/lib/types";
 import { fromDbRow } from "@/lib/types";
 import AddMemberPanel from "@/components/AddMemberPanel";
@@ -22,6 +22,7 @@ export default function DashboardClient({
   const [pending, setPending] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [printMemberId, setPrintMemberId] = useState<string | null>(null);
+  const [editingMemberId, setEditingMemberId] = useState<string | null>(null);
 
   useEffect(() => {
     if (!printMemberId) return;
@@ -64,6 +65,36 @@ export default function DashboardClient({
     setMembers((prev) => [...prev, fromDbRow(data as DbTeamMemberRow)]);
   }
 
+  async function handleUpdate(id: string, input: { name: string; date: string; raw: RawScores & Partial<ExtraRawScores> }) {
+    setPending(true);
+    setError(null);
+    const supabase = createClient();
+    const scores = computeScores(input.raw);
+
+    const { data, error: updateError } = await supabase
+      .from("team_members")
+      .update({
+        name: input.name || "(氏名未設定)",
+        measured_date: input.date || null,
+        raw_scores: input.raw,
+        talent_scores: scores,
+      })
+      .eq("id", id)
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at")
+      .single();
+
+    setPending(false);
+
+    if (updateError || !data) {
+      setError("メンバーの更新に失敗しました。時間をおいて再度お試しください。");
+      return;
+    }
+
+    const updated = fromDbRow(data as DbTeamMemberRow);
+    setMembers((prev) => prev.map((m) => (m.id === id ? updated : m)));
+    setEditingMemberId(null);
+  }
+
   async function handleDelete(id: string) {
     const supabase = createClient();
     const { error: deleteError } = await supabase.from("team_members").delete().eq("id", id);
@@ -77,7 +108,13 @@ export default function DashboardClient({
   return (
     <>
       <div className="no-print">
-        <AddMemberPanel onAdd={handleAdd} pending={pending} />
+        <AddMemberPanel
+          onAdd={handleAdd}
+          pending={pending}
+          editingMember={members.find((m) => m.id === editingMemberId) ?? null}
+          onUpdate={handleUpdate}
+          onCancelEdit={() => setEditingMemberId(null)}
+        />
         {error && <p className="field-error">{error}</p>}
       </div>
       <div className={printMemberId ? "roster-print-single" : "no-print"}>
@@ -85,6 +122,7 @@ export default function DashboardClient({
           members={members}
           onDelete={handleDelete}
           onPrintMember={setPrintMemberId}
+          onEditMember={setEditingMemberId}
           printTargetId={printMemberId}
         />
       </div>
