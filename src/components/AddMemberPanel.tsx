@@ -1,7 +1,10 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { DEFAULT_RAW, type RawKey, type RawScores } from "@/lib/talents";
+import {
+  DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES,
+  type RawKey, type RawScores, type ExtraRawScores,
+} from "@/lib/talents";
 import { extractFromPdf } from "@/lib/pdfExtract";
 
 const FIELD_GROUPS: { title: string; keys: RawKey[] }[] = [
@@ -20,13 +23,14 @@ export default function AddMemberPanel({
   onAdd,
   pending,
 }: {
-  onAdd: (input: { name: string; date: string; raw: RawScores }) => Promise<void> | void;
+  onAdd: (input: { name: string; date: string; raw: RawScores & Partial<ExtraRawScores> }) => Promise<void> | void;
   pending?: boolean;
 }) {
   const [manualOpen, setManualOpen] = useState(false);
   const [name, setName] = useState("");
   const [date, setDate] = useState("");
   const [raw, setRaw] = useState<RawScores>({ ...DEFAULT_RAW });
+  const [extraRaw, setExtraRaw] = useState<ExtraRawScores>({ ...DEFAULT_EXTRA_RAW });
   const [status, setStatus] = useState<{ kind: "ok" | "err"; text: string; meta?: string } | null>(null);
   const [dragging, setDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -35,6 +39,7 @@ export default function AddMemberPanel({
     setName("");
     setDate("");
     setRaw({ ...DEFAULT_RAW });
+    setExtraRaw({ ...DEFAULT_EXTRA_RAW });
   }
 
   async function handleFile(file: File | undefined | null) {
@@ -80,7 +85,7 @@ export default function AddMemberPanel({
   }
 
   async function handleAdd() {
-    await onAdd({ name, date, raw });
+    await onAdd({ name, date, raw: { ...raw, ...extraRaw } });
     resetForm();
     setStatus(null);
   }
@@ -162,6 +167,46 @@ export default function AddMemberPanel({
                 ))}
               </div>
             ))}
+
+            <div className="field-group">
+              <p className="field-group-title">思考タイプ(任意・合計100%目安)</p>
+              {THINKING_TYPES.map((t) => (
+                <div className="field-row" key={t.key}>
+                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
+                  <div className="input-wrap">
+                    <input
+                      id={`m-${t.key}`}
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={extraRaw[t.key]}
+                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
+                    />
+                    <span className="pct">%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="field-group">
+              <p className="field-group-title">感覚チャンネル(任意・合計100%目安)</p>
+              {SENSE_TYPES.map((t) => (
+                <div className="field-row" key={t.key}>
+                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
+                  <div className="input-wrap">
+                    <input
+                      id={`m-${t.key}`}
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={extraRaw[t.key]}
+                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
+                    />
+                    <span className="pct">%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
 
             <div className="btn-row">
               <button type="button" className="primary" onClick={handleAdd} disabled={pending}>
