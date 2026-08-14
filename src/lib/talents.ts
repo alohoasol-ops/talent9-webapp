@@ -45,25 +45,27 @@ export interface ThinkingType {
   key: ThinkingKey;
   name: string;
   def: string;
+  workHint: string;
 }
 
 export const THINKING_TYPES: ThinkingType[] = [
-  { key: "scrutiny", name: "慎重型", def: "物事を丁寧に調べ、根拠や仕組みに納得してから動くタイプ。じっくり考える時間があるほど力を発揮します。" },
-  { key: "steady", name: "堅実型", def: "決まった手順やルールを大切にし、リスクを避けながら着実に進めるタイプ。見通しが立つと安心して力を発揮します。" },
-  { key: "coop", name: "協調型", def: "周囲との関係性を大切にし、人との一体感や評価の中でモチベーションが高まるタイプ。" },
-  { key: "idea", name: "ひらめき型", def: "新しいものや変化に興味を持ち、発想力を活かして素早く判断するタイプ。好奇心が原動力になります。" },
+  { key: "scrutiny", name: "慎重型", def: "物事を丁寧に調べ、根拠や仕組みに納得してから動くタイプ。じっくり考える時間があるほど力を発揮します。", workHint: "根拠やデータを確認しながら進める" },
+  { key: "steady", name: "堅実型", def: "決まった手順やルールを大切にし、リスクを避けながら着実に進めるタイプ。見通しが立つと安心して力を発揮します。", workHint: "手順やルールが明確な中で着実に進める" },
+  { key: "coop", name: "協調型", def: "周囲との関係性を大切にし、人との一体感や評価の中でモチベーションが高まるタイプ。", workHint: "人との関わりやチームプレーを大切にする" },
+  { key: "idea", name: "ひらめき型", def: "新しいものや変化に興味を持ち、発想力を活かして素早く判断するタイプ。好奇心が原動力になります。", workHint: "変化や新しい挑戦を取り入れながら進める" },
 ];
 
 export interface SenseType {
   key: SenseKey;
   name: string;
   def: string;
+  workHint: string;
 }
 
 export const SENSE_TYPES: SenseType[] = [
-  { key: "visual", name: "視覚型", def: "見る・読むことで理解が進むタイプ。図やグラフ、文字情報があると納得しやすくなります。" },
-  { key: "auditory", name: "聴覚型", def: "聞く・話すことで理解が進むタイプ。説明を耳で聞いたり、声に出して確認すると定着しやすくなります。" },
-  { key: "tactile", name: "体感型", def: "まず触れる・やってみることで理解が進むタイプ。実際に体を動かしながら覚えるのが得意です。" },
+  { key: "visual", name: "視覚型", def: "見る・読むことで理解が進むタイプ。図やグラフ、文字情報があると納得しやすくなります。", workHint: "資料や図を見ながら理解を深める" },
+  { key: "auditory", name: "聴覚型", def: "聞く・話すことで理解が進むタイプ。説明を耳で聞いたり、声に出して確認すると定着しやすくなります。", workHint: "会話や説明を通じて理解を深める" },
+  { key: "tactile", name: "体感型", def: "まず触れる・やってみることで理解が進むタイプ。実際に体を動かしながら覚えるのが得意です。", workHint: "実際に手を動かしながら理解を深める" },
 ];
 
 export function hasExtraData(keys: (ThinkingKey | SenseKey)[], raw: Partial<ExtraRawScores>): boolean {
@@ -80,6 +82,14 @@ export function rankedSense(raw: Partial<ExtraRawScores>) {
   return SENSE_TYPES
     .map((t) => ({ t, value: Number(raw[t.key] ?? 0) }))
     .sort((a, b) => b.value - a.value);
+}
+
+export function combinedInsight(talent: Talent, thinking: ThinkingType, sense: SenseType): { strength: string; reason: string; roleFit: string } {
+  return {
+    strength: `${talent.name}を軸に、${thinking.name}と${sense.name}の傾向を併せ持つタイプです。`,
+    reason: `${talent.def} これに加えて、${thinking.workHint}という思考の特徴と、${sense.workHint}という情報の受け取り方が組み合わさることで、単に${talent.name}が高いだけでなく、実務の進め方にも一貫した強みが表れます。`,
+    roleFit: `${talent.roles}といった職種の中でも、特に${thinking.workHint}かつ${sense.workHint}ような環境・役割で力を発揮しやすいと考えられます。`,
+  };
 }
 
 export type TalentKey =
