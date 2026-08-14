@@ -46,13 +46,31 @@ export interface ThinkingType {
   name: string;
   def: string;
   workHint: string;
+  commTrait: string;
+  commAdvice: string;
 }
 
 export const THINKING_TYPES: ThinkingType[] = [
-  { key: "scrutiny", name: "慎重型", def: "物事を丁寧に調べ、根拠や仕組みに納得してから動くタイプ。じっくり考える時間があるほど力を発揮します。", workHint: "根拠やデータを確認しながら進める" },
-  { key: "steady", name: "堅実型", def: "決まった手順やルールを大切にし、リスクを避けながら着実に進めるタイプ。見通しが立つと安心して力を発揮します。", workHint: "手順やルールが明確な中で着実に進める" },
-  { key: "coop", name: "協調型", def: "周囲との関係性を大切にし、人との一体感や評価の中でモチベーションが高まるタイプ。", workHint: "人との関わりやチームプレーを大切にする" },
-  { key: "idea", name: "ひらめき型", def: "新しいものや変化に興味を持ち、発想力を活かして素早く判断するタイプ。好奇心が原動力になります。", workHint: "変化や新しい挑戦を取り入れながら進める" },
+  {
+    key: "scrutiny", name: "慎重型", def: "物事を丁寧に調べ、根拠や仕組みに納得してから動くタイプ。じっくり考える時間があるほど力を発揮します。", workHint: "根拠やデータを確認しながら進める",
+    commTrait: "根拠が明確でないと納得しにくく、勢いだけの提案には慎重になりやすい",
+    commAdvice: "結論だけでなく、理由やデータも一緒に伝えると納得を得やすくなります",
+  },
+  {
+    key: "steady", name: "堅実型", def: "決まった手順やルールを大切にし、リスクを避けながら着実に進めるタイプ。見通しが立つと安心して力を発揮します。", workHint: "手順やルールが明確な中で着実に進める",
+    commTrait: "急な変更や曖昧な指示には不安を感じやすい",
+    commAdvice: "変更がある場合は、事前に見通しを伝えておくと安心して受け止めてもらえます",
+  },
+  {
+    key: "coop", name: "協調型", def: "周囲との関係性を大切にし、人との一体感や評価の中でモチベーションが高まるタイプ。", workHint: "人との関わりやチームプレーを大切にする",
+    commTrait: "一方的な指示よりも、対話や相談の形を好む",
+    commAdvice: "指示するより、一緒に相談する形で話しかけると受け入れられやすくなります",
+  },
+  {
+    key: "idea", name: "ひらめき型", def: "新しいものや変化に興味を持ち、発想力を活かして素早く判断するタイプ。好奇心が原動力になります。", workHint: "変化や新しい挑戦を取り入れながら進める",
+    commTrait: "細かい手順の説明より、全体像や目的から入る方が理解しやすい",
+    commAdvice: "詳細から入るのではなく、まず全体像や狙いを伝えると話が伝わりやすくなります",
+  },
 ];
 
 export interface SenseType {
@@ -60,12 +78,26 @@ export interface SenseType {
   name: string;
   def: string;
   workHint: string;
+  commTrait: string;
+  commAdvice: string;
 }
 
 export const SENSE_TYPES: SenseType[] = [
-  { key: "visual", name: "視覚型", def: "見る・読むことで理解が進むタイプ。図やグラフ、文字情報があると納得しやすくなります。", workHint: "資料や図を見ながら理解を深める" },
-  { key: "auditory", name: "聴覚型", def: "聞く・話すことで理解が進むタイプ。説明を耳で聞いたり、声に出して確認すると定着しやすくなります。", workHint: "会話や説明を通じて理解を深める" },
-  { key: "tactile", name: "体感型", def: "まず触れる・やってみることで理解が進むタイプ。実際に体を動かしながら覚えるのが得意です。", workHint: "実際に手を動かしながら理解を深める" },
+  {
+    key: "visual", name: "視覚型", def: "見る・読むことで理解が進むタイプ。図やグラフ、文字情報があると納得しやすくなります。", workHint: "資料や図を見ながら理解を深める",
+    commTrait: "言葉だけの説明より、資料や文字で見せてもらう方が理解しやすい",
+    commAdvice: "口頭だけで伝えず、資料やメモ、図を用意して伝えると伝わりやすくなります",
+  },
+  {
+    key: "auditory", name: "聴覚型", def: "聞く・話すことで理解が進むタイプ。説明を耳で聞いたり、声に出して確認すると定着しやすくなります。", workHint: "会話や説明を通じて理解を深める",
+    commTrait: "資料を読むよりも、口頭で説明してもらう方が理解しやすい",
+    commAdvice: "文書だけで済まさず、直接話す時間を取って説明すると伝わりやすくなります",
+  },
+  {
+    key: "tactile", name: "体感型", def: "まず触れる・やってみることで理解が進むタイプ。実際に体を動かしながら覚えるのが得意です。", workHint: "実際に手を動かしながら理解を深める",
+    commTrait: "説明を聞くよりも、実際にやってみながら理解する",
+    commAdvice: "説明だけで終わらせず、実際に試させながら伝えると理解が深まります",
+  },
 ];
 
 export function hasExtraData(keys: (ThinkingKey | SenseKey)[], raw: Partial<ExtraRawScores>): boolean {
@@ -82,6 +114,13 @@ export function rankedSense(raw: Partial<ExtraRawScores>) {
   return SENSE_TYPES
     .map((t) => ({ t, value: Number(raw[t.key] ?? 0) }))
     .sort((a, b) => b.value - a.value);
+}
+
+export function communicationInsight(thinking: ThinkingType, sense: SenseType): { traits: string[]; advice: string[] } {
+  return {
+    traits: [thinking.commTrait, sense.commTrait],
+    advice: [thinking.commAdvice, sense.commAdvice],
+  };
 }
 
 export function combinedInsight(talent: Talent, thinking: ThinkingType, sense: SenseType): { strength: string; reason: string; roleFit: string } {
