@@ -231,3 +231,72 @@ export default function AddMemberPanel({
                   style={{ display: "none" }}
                 />
               </label>
+              {thinkingStatus && (
+                <div className={`status-box ${thinkingStatus.kind}`} style={{ marginBottom: 10 }}>
+                  {thinkingStatus.text}
+                </div>
+              )}
+              {THINKING_TYPES.map((t) => (
+                <div className="field-row" key={t.key}>
+                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
+                  <div className="input-wrap">
+                    <input
+                      id={`m-${t.key}`}
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={extraRaw[t.key]}
+                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
+                    />
+                    <span className="pct">%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="field-group">
+              <p className="field-group-title">感覚チャンネル(任意・合計100%目安)</p>
+              <label className="btn" style={{ display: "inline-block", marginBottom: 10, fontSize: 12.5, cursor: "pointer" }}>
+                池川センスチャネルアセスメントの結果PDFを読み込む
+                <input
+                  type="file"
+                  accept="application/pdf"
+                  onChange={(e) => handleSenseFile(e.target.files?.[0])}
+                  style={{ display: "none" }}
+                />
+              </label>
+              {senseStatus && (
+                <div className={`status-box ${senseStatus.kind}`} style={{ marginBottom: 10 }}>
+                  {senseStatus.text}
+                </div>
+              )}
+              {SENSE_TYPES.map((t) => (
+                <div className="field-row" key={t.key}>
+                  <label htmlFor={`m-${t.key}`}>{t.name}</label>
+                  <div className="input-wrap">
+                    <input
+                      id={`m-${t.key}`}
+                      type="number"
+                      min={0}
+                      max={100}
+                      value={extraRaw[t.key]}
+                      onChange={(e) => setExtraRaw((prev) => ({ ...prev, [t.key]: Number(e.target.value) }))}
+                    />
+                    <span className="pct">%</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="btn-row">
+              <button type="button" className="primary" onClick={handleAdd} disabled={pending}>
+                {pending ? "追加中…" : "＋ チームに追加"}
+              </button>
+              <button type="button" onClick={resetForm}>フォームをクリア</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
