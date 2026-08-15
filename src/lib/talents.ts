@@ -176,7 +176,7 @@ export const TALENTS: Talent[] = [
     managerTips: ["根拠やデータを扱う役割を任せる", "意思決定の理由を共有し納得感を持たせる", "分析・検証が必要な課題を渡す"],
     compatibility: {
       complement: "create", complementNote: "発想力の自由なアイデアを、論理力が現実的な形に整理する組み合わせです。",
-      tension: "lead", tensionNote: "慎重に検証したい論理力と、スピード重視で決断するリーダー力はペースが合わないことがあります。",
+      tension: "lead", tensionNote: "慎重に検証したい論理力と、スピード重視で決断する巻き込み力はペースが合わないことがあります。",
     },
   },
   {
@@ -210,12 +210,12 @@ export const TALENTS: Talent[] = [
     motivationDown: ["対立や衝突が絶えない環境", "成果だけで人間関係が軽視される", "孤立して働くことを求められる"],
     managerTips: ["人と関わる役割(窓口・相談役)を任せる", "チームの雰囲気づくりへの貢献を言語化して評価する", "一対一で話す時間を定期的に確保する"],
     compatibility: {
-      complement: "lead", complementNote: "人を思う共感力と、前に進めるリーダー力が組み合わさると、無理のない推進力が生まれます。",
+      complement: "lead", complementNote: "人を思う共感力と、前に進める巻き込み力が組み合わさると、無理のない推進力が生まれます。",
       tension: "logic", tensionNote: "感情面への配慮を求める共感力と、合理性を優先する論理力はすれ違いやすい組み合わせです。",
     },
   },
   {
-    key: "lead", name: "リーダー力",
+    key: "lead", name: "巻き込み力",
     def: "目標を定め、周囲を巻き込みながら物事を前に進める力。",
     essence: "目標に向けて周囲を巻き込み、前進させる人です。決断力と推進力で、組織に勢いをもたらします。",
     roles: "経営者・プロジェクトマネージャー・営業リーダー",
@@ -228,8 +228,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["承認プロセスが多く決断できない", "指示待ちを求められる", "成果より過程ばかり管理される"],
     managerTips: ["裁量を持たせて任せる", "目標設定とその後の振り返りを一緒に行う", "小さなプロジェクトの責任者を経験させる"],
     compatibility: {
-      complement: "empathy", complementNote: "推進力のあるリーダー力に、共感力の人への配慮が加わると、無理のない前進ができます。",
-      tension: "intro", tensionNote: "スピードを求めるリーダー力と、じっくり考えたい探究力はテンポが合わないことがあります。",
+      complement: "empathy", complementNote: "推進力のある巻き込み力に、共感力の人への配慮が加わると、無理のない前進ができます。",
+      tension: "intro", tensionNote: "スピードを求める巻き込み力と、じっくり考えたい探究力はテンポが合わないことがあります。",
     },
   },
   {
@@ -247,7 +247,7 @@ export const TALENTS: Talent[] = [
     managerTips: ["一つのテーマを深掘りする時間を確保する", "拙速な結論を求めず、じっくり検討させる", "専門性を発揮できる役割を用意する"],
     compatibility: {
       complement: "expr", complementNote: "探究力が深めた知見を、伝達力が分かりやすく発信する組み合わせです。",
-      tension: "lead", tensionNote: "深く考えたい探究力と、スピードを求めるリーダー力はテンポが合わないことがあります。",
+      tension: "lead", tensionNote: "深く考えたい探究力と、スピードを求める巻き込み力はテンポが合わないことがあります。",
     },
   },
   {
@@ -269,7 +269,7 @@ export const TALENTS: Talent[] = [
     },
   },
   {
-    key: "space", name: "デザイン力",
+    key: "space", name: "彩る力",
     def: "形・色・空間・レイアウトなどを視覚的に捉え、構成する力。",
     essence: "形や空間を美しく構成する人です。視覚的な発想で、アイデアをかたちにする力を発揮します。",
     roles: "デザイナー・建築家・映像写真・インテリア・設計エンジニア",
@@ -281,8 +281,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["機能・効率だけで判断される", "完成イメージを共有せず進められる", "表現の細部を軽視される"],
     managerTips: ["見た目や使いやすさを検討する工程に関わらせる", "完成イメージを共有した上で任せる", "表現やデザインへのこだわりを尊重する"],
     compatibility: {
-      complement: "body", complementNote: "デザイン力が描いた形を、実践力が実際に作り上げる組み合わせです。",
-      tension: "order", tensionNote: "新しい表現を求めるデザイン力と、決まった手順を守りたい継続力は方向性が異なることがあります。",
+      complement: "body", complementNote: "彩る力が描いた形を、実践力が実際に作り上げる組み合わせです。",
+      tension: "order", tensionNote: "新しい表現を求める彩る力と、決まった手順を守りたい継続力は方向性が異なることがあります。",
     },
   },
   {
@@ -299,7 +299,7 @@ export const TALENTS: Talent[] = [
     motivationDown: ["座学や書類作業ばかりが続く", "頭で考えるだけで実行に移せない", "じっと待たされる時間が長い"],
     managerTips: ["実際に手を動かす・試作する機会を与える", "座学より実践を通じた学びの場を用意する", "素早く試して素早く直すサイクルを許容する"],
     compatibility: {
-      complement: "space", complementNote: "実践力の実行力に、デザイン力の形や美しさへの視点が加わる組み合わせです。",
+      complement: "space", complementNote: "実践力の実行力に、彩る力の形や美しさへの視点が加わる組み合わせです。",
       tension: "intro", tensionNote: "まず動きたい実践力と、じっくり考えたい探究力はペースが合わないことがあります。",
     },
   },
@@ -317,7 +317,7 @@ export const TALENTS: Talent[] = [
     managerTips: ["計画立てて進める役割を任せる", "地道な積み重ねを定期的に評価・承認する", "急な方針転換を避け、見通しを示す"],
     compatibility: {
       complement: "create", complementNote: "安定した継続力に、発想力の新しいアイデアが刺激を与える組み合わせです。",
-      tension: "lead", tensionNote: "スピードを求めるリーダー力と、着実に進めたい継続力はペースが合わないことがあります。",
+      tension: "lead", tensionNote: "スピードを求める巻き込み力と、着実に進めたい継続力はペースが合わないことがあります。",
     },
   },
 ];
