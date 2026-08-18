@@ -10,7 +10,7 @@ export default function Topbar({
   return (
     <div className="topbar no-print">
       <div className="tb-left">
-        <span className="tb-brand">9才能ポートフォリオ</span>
+        <span className="tb-brand">9タレントマップ</span>
         <span className="tb-role">{roleLabel}</span>
         {contextLabel && <span className="tb-role">{contextLabel}</span>}
       </div>
