@@ -69,7 +69,7 @@ export default async function HqPage() {
       <Topbar roleLabel="本部アカウント" email={profile.email} />
       <div className="shell">
         <header className="top">
-          <h1 className="font-display">本部　人的資本ポートフォリオ</h1>
+          <h1 className="font-display">本部　9タレントマップ</h1>
           <p>全社の9才能データを横断的に確認できます。各社のデータは会社アカウントが登録し、本部からは閲覧のみ行えます。</p>
           <div className="badge-row">
             <span className="badge">全{companies?.length ?? 0}社</span>
