@@ -28,7 +28,7 @@ export default async function DashboardPage() {
       <Topbar roleLabel="会社アカウント" contextLabel={company?.name} email={profile.email ? emailToLoginId(profile.email) : profile.email} />
       <div className="shell">
         <header className="top">
-          <h1 className="font-display">{company?.name || "チーム"} の9才能ポートフォリオ</h1>
+          <h1 className="font-display">{company?.name || "チーム"} の9タレントマップ</h1>
           <p>脳科学系アセスメントの結果PDFをメンバーごとに取り込み、チームの才能構成を可視化します。</p>
           <div className="badge-row">
             <span className="badge">PDF解析はブラウザ内で完結</span>
