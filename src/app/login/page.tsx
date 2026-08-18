@@ -9,7 +9,7 @@ export default function LoginPage() {
   return (
     <div className="auth-shell">
       <div className="auth-card">
-        <h1 className="font-display">9才能 人的資本ポートフォリオ</h1>
+        <h1 className="font-display">9タレントマップ</h1>
         <p className="sub">会社アカウントまたは本部アカウントでログインしてください</p>
         <form action={formAction}>
           <div className="name-field">
