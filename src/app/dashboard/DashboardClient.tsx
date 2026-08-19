@@ -52,7 +52,7 @@ export default function DashboardClient({
         raw_scores: input.raw,
         talent_scores: scores,
       })
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
       .single();
 
     setPending(false);
@@ -70,6 +70,7 @@ export default function DashboardClient({
     setError(null);
     const supabase = createClient();
     const scores = computeScores(input.raw);
+    const existing = members.find((m) => m.id === id);
 
     const { data, error: updateError } = await supabase
       .from("team_members")
@@ -78,9 +79,11 @@ export default function DashboardClient({
         measured_date: input.date || null,
         raw_scores: input.raw,
         talent_scores: scores,
+        previous_talent_scores: existing ? existing.scores : null,
+        previous_measured_date: existing ? existing.measuredDate : null,
       })
       .eq("id", id)
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
       .single();
 
     setPending(false);
@@ -101,7 +104,7 @@ export default function DashboardClient({
       .from("team_members")
       .update({ goal_sheet: goalSheet })
       .eq("id", id)
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
       .single();
 
     if (updateError || !data) {
