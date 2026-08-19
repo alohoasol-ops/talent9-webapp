@@ -1,5 +1,29 @@
 import type { ExtraRawScores, RawScores, TalentScores } from "./talents";
 
+export interface GoalSheet {
+  strengthCompany: string;
+  roleCompany: string;
+  motivationCompany: string;
+  threeMonthPersonal: string;
+  threeMonthCompany: string;
+  oneYearPersonal: string;
+  oneYearCompany: string;
+  actionPersonal: string;
+  actionCompany: string;
+}
+
+export const DEFAULT_GOAL_SHEET: GoalSheet = {
+  strengthCompany: "",
+  roleCompany: "",
+  motivationCompany: "",
+  threeMonthPersonal: "",
+  threeMonthCompany: "",
+  oneYearPersonal: "",
+  oneYearCompany: "",
+  actionPersonal: "",
+  actionCompany: "",
+};
+
 export interface TeamMember {
   id: string;
   companyId: string;
@@ -7,6 +31,7 @@ export interface TeamMember {
   measuredDate: string | null;
   raw: RawScores & Partial<ExtraRawScores>;
   scores: TalentScores;
+  goalSheet: GoalSheet;
   createdAt: string;
 }
 
@@ -17,6 +42,7 @@ export interface DbTeamMemberRow {
   measured_date: string | null;
   raw_scores: RawScores & Partial<ExtraRawScores>;
   talent_scores: TalentScores;
+  goal_sheet: Partial<GoalSheet> | null;
   created_at: string;
 }
 
@@ -28,6 +54,7 @@ export function fromDbRow(row: DbTeamMemberRow): TeamMember {
     measuredDate: row.measured_date,
     raw: row.raw_scores,
     scores: row.talent_scores,
+    goalSheet: { ...DEFAULT_GOAL_SHEET, ...(row.goal_sheet || {}) },
     createdAt: row.created_at,
   };
 }
