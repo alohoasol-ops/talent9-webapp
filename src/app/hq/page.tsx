@@ -23,7 +23,7 @@ export default async function HqPage() {
 
   const { data: memberRows } = await supabase
     .from("team_members")
-    .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at");
+    .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at");
 
   const allMembers = ((memberRows as DbTeamMemberRow[] | null) || []).map(fromDbRow);
 
