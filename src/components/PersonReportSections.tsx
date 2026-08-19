@@ -3,7 +3,7 @@
 import {
   rankedOf, TALENT_BY_KEY,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
-  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips,
+  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips, scoreDeltas,
 } from "@/lib/talents";
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
@@ -42,6 +42,33 @@ export default function PersonReportSections({
 
   return (
     <div className="strength-block">
+      {member.previousScores && (
+        <>
+          <p className="field-group-title">
+            前回との比較{member.previousMeasuredDate ? `(前回測定日：${member.previousMeasuredDate})` : ""}
+          </p>
+          <div className="scroll-x" style={{ marginBottom: 18 }}>
+            <table className="data">
+              <thead>
+                <tr><th>才能</th><th>前回</th><th>今回</th><th>変化</th></tr>
+              </thead>
+              <tbody>
+                {scoreDeltas(member.scores, member.previousScores).map((d) => (
+                  <tr key={d.t.key}>
+                    <td className="name-cell">{d.t.name}</td>
+                    <td className="mono">{d.previous.toFixed(1)}</td>
+                    <td className="mono">{d.current.toFixed(1)}</td>
+                    <td className="mono" style={{ color: d.delta > 0 ? "var(--brand)" : d.delta < 0 ? "var(--danger)" : "var(--ink-dim)" }}>
+                      {d.delta > 0 ? "▲" : d.delta < 0 ? "▼" : "→"} {d.delta > 0 ? "+" : ""}{d.delta.toFixed(1)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </>
+      )}
+
       <p className="field-group-title">エグゼクティブサマリー</p>
       <div className="stat-grid" style={{ marginBottom: 10 }}>
         <div className="stat-card"><div className="stat-n" style={{ fontSize: 16 }}>{main.name}</div><div className="stat-l">メイン才能</div></div>
