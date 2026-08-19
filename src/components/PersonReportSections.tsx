@@ -5,7 +5,8 @@ import {
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
   RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips,
 } from "@/lib/talents";
-import type { TeamMember } from "@/lib/types";
+import type { TeamMember, GoalSheet } from "@/lib/types";
+import GoalSheetForm from "./GoalSheetForm";
 
 const TRUST_BUILDERS = [
   { label: "認める", note: "結果が出る前から、相手の存在や取り組みそのものを肯定する" },
@@ -20,7 +21,13 @@ const TRUST_ERODERS = [
   { label: "疑う気持ち", note: "「本当に大丈夫か」という不安が強いほど、信頼は弱まる" },
 ];
 
-export default function PersonReportSections({ member }: { member: TeamMember }) {
+export default function PersonReportSections({
+  member,
+  onSaveGoalSheet,
+}: {
+  member: TeamMember;
+  onSaveGoalSheet?: (id: string, sheet: GoalSheet) => Promise<void> | void;
+}) {
   const ranked = rankedOf(member.scores);
   const main = ranked[0].t;
   const sub = ranked[1].t;
@@ -194,21 +201,7 @@ export default function PersonReportSections({ member }: { member: TeamMember })
       </p>
 
       <p className="field-group-title">個人目標 × 会社目標 接続シート(1on1テンプレート)</p>
-      <div className="scroll-x">
-        <table className="data goal-sheet">
-          <thead>
-            <tr><th>項目</th><th>個人({member.name || "本人"})</th><th>会社・チーム</th></tr>
-          </thead>
-          <tbody>
-            <tr><td>才能・強み</td><td>{main.name}({sub.name})</td><td></td></tr>
-            <tr><td>最も輝ける役割</td><td>{main.roles}</td><td></td></tr>
-            <tr><td>モチベーション源泉</td><td>{main.motivationUp.slice(0, 2).join("／")}</td><td></td></tr>
-            <tr><td>3ヶ月の目標</td><td></td><td></td></tr>
-            <tr><td>1年後のありたい姿</td><td></td><td></td></tr>
-            <tr><td>目標一致のためのアクション</td><td></td><td></td></tr>
-          </tbody>
-        </table>
-      </div>
+      <GoalSheetForm member={member} onSave={onSaveGoalSheet} />
     </div>
   );
 }
