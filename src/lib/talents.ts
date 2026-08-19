@@ -461,6 +461,15 @@ export function rankedOf(scores: TalentScores) {
     .sort((a, b) => b.score - a.score);
 }
 
+export function scoreDeltas(current: TalentScores, previous: TalentScores) {
+  return TALENTS
+    .map((t) => {
+      const delta = Math.round((current[t.key] - previous[t.key]) * 10) / 10;
+      return { t, current: current[t.key], previous: previous[t.key], delta };
+    })
+    .sort((a, b) => Math.abs(b.delta) - Math.abs(a.delta));
+}
+
 export function relNormalize(scores: TalentScores): Record<TalentKey, number> {
   const vals = CHART_ORDER.map((k) => scores[k]);
   const max = Math.max(...vals) || 1;
