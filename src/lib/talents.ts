@@ -17,6 +17,25 @@ export const RAW_LABELS: Record<RawKey, string> = {
 
 export const RAW_KEYS: RawKey[] = ["wp", "fd", "ao", "ce", "ea", "ec", "acc", "mpfc", "ofc", "solo"];
 
+export const RAW_DEFS: Record<RawKey, string> = {
+  wp: "他者の気持ちや意図を想像しながら関わる傾向。",
+  fd: "集中して深く考え、計画的に取り組む傾向。",
+  ao: "新しい刺激や変化に反応し、行動を広げる傾向。",
+  ce: "周囲の感情の動きを敏感に察知する傾向。",
+  ea: "感情や意欲が行動として表に出やすい度合い。",
+  ec: "感情を目的に合わせて調整する度合い。",
+  acc: "対人関係の中でリスクや緊張を察知する感度。",
+  mpfc: "周囲からどう見られているかを意識する度合い。",
+  ofc: "周りの感情の影響を受けやすい度合い。",
+  solo: "自分のペースで物事を進めたい度合い。",
+};
+
+export function rawBand(value: number): string {
+  if (value >= 65) return "高め";
+  if (value >= 40) return "標準";
+  return "低め";
+}
+
 export const DEFAULT_RAW: RawScores = {
   wp: 40, fd: 35, ao: 45, ce: 30, ea: 50, ec: 60, acc: 35, mpfc: 70, ofc: 50, solo: 45,
 };
