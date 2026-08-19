@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { computeScores, type RawScores, type ExtraRawScores } from "@/lib/talents";
-import type { TeamMember, DbTeamMemberRow } from "@/lib/types";
+import type { TeamMember, DbTeamMemberRow, GoalSheet } from "@/lib/types";
 import { fromDbRow } from "@/lib/types";
 import AddMemberPanel from "@/components/AddMemberPanel";
 import RosterPanel from "@/components/RosterPanel";
@@ -52,7 +52,7 @@ export default function DashboardClient({
         raw_scores: input.raw,
         talent_scores: scores,
       })
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at")
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
       .single();
 
     setPending(false);
@@ -80,7 +80,7 @@ export default function DashboardClient({
         talent_scores: scores,
       })
       .eq("id", id)
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at")
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
       .single();
 
     setPending(false);
@@ -93,6 +93,24 @@ export default function DashboardClient({
     const updated = fromDbRow(data as DbTeamMemberRow);
     setMembers((prev) => prev.map((m) => (m.id === id ? updated : m)));
     setEditingMemberId(null);
+  }
+
+  async function handleSaveGoalSheet(id: string, goalSheet: GoalSheet) {
+    const supabase = createClient();
+    const { data, error: updateError } = await supabase
+      .from("team_members")
+      .update({ goal_sheet: goalSheet })
+      .eq("id", id)
+      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
+      .single();
+
+    if (updateError || !data) {
+      alert("接続シートの保存に失敗しました。時間をおいて再度お試しください。");
+      return;
+    }
+
+    const updated = fromDbRow(data as DbTeamMemberRow);
+    setMembers((prev) => prev.map((m) => (m.id === id ? updated : m)));
   }
 
   async function handleDelete(id: string) {
@@ -123,6 +141,7 @@ export default function DashboardClient({
           onDelete={handleDelete}
           onPrintMember={setPrintMemberId}
           onEditMember={setEditingMemberId}
+          onSaveGoalSheet={handleSaveGoalSheet}
           printTargetId={printMemberId}
         />
       </div>
