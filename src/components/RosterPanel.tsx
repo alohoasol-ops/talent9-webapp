@@ -3,7 +3,7 @@
 import RadarChart from "./RadarChart";
 import PersonReportSections from "./PersonReportSections";
 import { rankedOf, commentFor, presetFits } from "@/lib/talents";
-import type { TeamMember } from "@/lib/types";
+import type { TeamMember, GoalSheet } from "@/lib/types";
 
 function RankTable({ scores }: { scores: TeamMember["scores"] }) {
   const ranked = rankedOf(scores);
@@ -38,6 +38,7 @@ export default function RosterPanel({
   onDelete,
   onPrintMember,
   onEditMember,
+  onSaveGoalSheet,
   printTargetId,
   readOnly,
   step = "02",
@@ -46,6 +47,7 @@ export default function RosterPanel({
   onDelete?: (id: string) => void;
   onPrintMember?: (id: string) => void;
   onEditMember?: (id: string) => void;
+  onSaveGoalSheet?: (id: string, sheet: GoalSheet) => Promise<void> | void;
   printTargetId?: string | null;
   readOnly?: boolean;
   step?: string;
@@ -144,7 +146,7 @@ export default function RosterPanel({
                   ))}
                 </div>
               </div>
-              <PersonReportSections member={m} />
+              <PersonReportSections member={m} onSaveGoalSheet={onSaveGoalSheet} />
             </details>
           );
         })
