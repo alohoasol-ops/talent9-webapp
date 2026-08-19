@@ -17,7 +17,7 @@ export default async function DashboardPage() {
 
   const { data: memberRows } = await supabase
     .from("team_members")
-    .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
+    .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
     .eq("company_id", profile.companyId)
     .order("created_at", { ascending: true });
 
