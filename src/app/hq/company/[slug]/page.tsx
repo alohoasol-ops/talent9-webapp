@@ -28,7 +28,7 @@ export default async function HqCompanyPage({
 
   const { data: memberRows } = await supabase
     .from("team_members")
-    .select("id, company_id, name, measured_date, raw_scores, talent_scores, created_at")
+    .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, created_at")
     .eq("company_id", company.id)
     .order("created_at", { ascending: true });
 
