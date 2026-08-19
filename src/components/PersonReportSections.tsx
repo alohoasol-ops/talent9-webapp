@@ -3,6 +3,7 @@
 import {
   rankedOf, TALENT_BY_KEY,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
+  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand,
 } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
@@ -40,6 +41,23 @@ export default function PersonReportSections({ member }: { member: TeamMember })
         <div className="stat-card"><div className="stat-n" style={{ fontSize: 16 }}>{sub.name}</div><div className="stat-l">サブ才能</div></div>
       </div>
       <div className="info-box" style={{ marginBottom: 18 }}>{main.essence}</div>
+
+      <p className="field-group-title">脳の使用傾向(測定値の詳細)</p>
+      <div style={{ marginBottom: 18 }}>
+        {RAW_KEYS.map((k) => {
+          const v = member.raw[k];
+          return (
+            <div className="coverage-row" key={k}>
+              <span className="cov-label">{RAW_LABELS[k]}</span>
+              <div className="cov-track"><div className="cov-fill" style={{ width: `${v}%` }} /></div>
+              <span className="cov-n">{v.toFixed(0)}%({rawBand(v)})</span>
+            </div>
+          );
+        })}
+        <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>
+          {RAW_KEYS.map((k) => `${RAW_LABELS[k]}：${RAW_DEFS[k]}`).join(" ")}
+        </p>
+      </div>
 
       {(showThinking || showSense) && (
         <>
