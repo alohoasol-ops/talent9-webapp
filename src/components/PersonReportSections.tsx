@@ -3,7 +3,7 @@
 import {
   rankedOf, TALENT_BY_KEY,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
-  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand,
+  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips,
 } from "@/lib/talents";
 import type { TeamMember } from "@/lib/types";
 
@@ -57,6 +57,18 @@ export default function PersonReportSections({ member }: { member: TeamMember })
         <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>
           {RAW_KEYS.map((k) => `${RAW_LABELS[k]}：${RAW_DEFS[k]}`).join(" ")}
         </p>
+      </div>
+
+      <p className="field-group-title">どんな人か</p>
+      <div className="info-box" style={{ marginBottom: 18 }}>{rawNarrative(member.raw)}</div>
+
+      <p className="field-group-title">定着のために気をつけたいポイント</p>
+      <div style={{ marginBottom: 18 }}>
+        {retentionTips(member.raw).length > 0 ? (
+          retentionTips(member.raw).map((t) => <p className="motiv-item" key={t}>・{t}</p>)
+        ) : (
+          <p className="motiv-item">各項目が標準的な範囲に収まっており、特に注意すべき偏りは見られません。</p>
+        )}
       </div>
 
       {(showThinking || showSense) && (
