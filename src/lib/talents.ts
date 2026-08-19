@@ -89,17 +89,32 @@ export function retentionTips(raw: RawScores): string[] {
   return tips;
 }
 
-export function rawNarrative(raw: RawScores): string {
+export const RAW_TRAITS: Record<RawKey, { high: string; low: string }> = {
+  wp: { high: "人の気持ちを汲み取りながら関わる", low: "人間関係よりも結果や仕組みを重視する" },
+  fd: { high: "じっくり考えて計画的に進める", low: "細かい計画より、その場の流れで柔軟に動く" },
+  ao: { high: "新しいことに刺激を感じ、行動の幅を広げる", low: "変化よりも慣れたペースを好む" },
+  ce: { high: "周りの空気や感情の変化によく気づく", low: "周りの空気にはあまり左右されない" },
+  ea: { high: "気持ちがそのまま行動や表情に出やすい", low: "気持ちを内に秘めやすい" },
+  ec: { high: "感情をうまくコントロールできる", low: "感情が動くとそのまま表に出やすい" },
+  acc: { high: "人間関係の変化に敏感な", low: "人間関係のリスクにはあまり動じない" },
+  mpfc: { high: "周りからどう見られているかを気にする", low: "周りの評価をあまり気にしない" },
+  ofc: { high: "周りの感情に影響を受けやすい", low: "周りの感情にあまり左右されない" },
+  solo: { high: "自分のペースを大事にする", low: "周りと歩調を合わせることを大事にする" },
+};
+
+export function rawNarrative(raw: RawScores, name?: string): string {
   const highs = [...RAW_KEYS].filter((k) => raw[k] >= 65).sort((a, b) => raw[b] - raw[a]).slice(0, 2);
   const lows = [...RAW_KEYS].filter((k) => raw[k] < 40).sort((a, b) => raw[a] - raw[b]).slice(0, 2);
+  const who = name || "この方";
   let text = "";
   if (highs.length) {
-    text += `特に${highs.map((k) => RAW_LABELS[k]).join("・")}の傾向が強く、${highs.map((k) => RAW_DEFS[k]).join("")}`;
+    text += `${who}は、${highs.map((k) => RAW_TRAITS[k].high).join("、")}人です。`;
+  } else {
+    text += `${who}は、特定の傾向に偏りが少なく、バランスの取れた人です。`;
   }
   if (lows.length) {
-    text += `一方で、${lows.map((k) => RAW_LABELS[k]).join("・")}は控えめな傾向があり、${lows.map((k) => RAW_DEFS[k]).join("")}`;
+    text += `一方で、${lows.map((k) => RAW_TRAITS[k].low).join("、")}一面もあります。`;
   }
-  if (!text) text = "各項目がバランスよく分布しており、特定の傾向に偏りが少ないタイプです。";
   return text;
 }
 
