@@ -32,6 +32,8 @@ export interface TeamMember {
   raw: RawScores & Partial<ExtraRawScores>;
   scores: TalentScores;
   goalSheet: GoalSheet;
+  previousScores: TalentScores | null;
+  previousMeasuredDate: string | null;
   createdAt: string;
 }
 
@@ -43,6 +45,8 @@ export interface DbTeamMemberRow {
   raw_scores: RawScores & Partial<ExtraRawScores>;
   talent_scores: TalentScores;
   goal_sheet: Partial<GoalSheet> | null;
+  previous_talent_scores: TalentScores | null;
+  previous_measured_date: string | null;
   created_at: string;
 }
 
@@ -55,6 +59,8 @@ export function fromDbRow(row: DbTeamMemberRow): TeamMember {
     raw: row.raw_scores,
     scores: row.talent_scores,
     goalSheet: { ...DEFAULT_GOAL_SHEET, ...(row.goal_sheet || {}) },
+    previousScores: row.previous_talent_scores ?? null,
+    previousMeasuredDate: row.previous_measured_date ?? null,
     createdAt: row.created_at,
   };
 }
