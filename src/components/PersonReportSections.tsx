@@ -60,7 +60,7 @@ export default function PersonReportSections({ member }: { member: TeamMember })
       </div>
 
       <p className="field-group-title">どんな人か</p>
-      <div className="info-box" style={{ marginBottom: 18 }}>{rawNarrative(member.raw)}</div>
+      <div className="info-box" style={{ marginBottom: 18 }}>{rawNarrative(member.raw, member.name)}</div>
 
       <p className="field-group-title">定着のために気をつけたいポイント</p>
       <div style={{ marginBottom: 18 }}>
