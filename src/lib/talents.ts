@@ -36,6 +36,73 @@ export function rawBand(value: number): string {
   return "低め";
 }
 
+export const RAW_CARE: Record<RawKey, { high: string; low: string }> = {
+  wp: {
+    high: "人間関係の変化に敏感なため、周囲との関係性が安定していることが安心につながります。",
+    low: "対人関係よりも成果や仕組みを重視するため、成果が正しく評価される環境が力になります。",
+  },
+  fd: {
+    high: "見通しの立たない状況が続くとストレスになりやすいため、方針や計画を早めに共有すると安心です。",
+    low: "細かい計画より柔軟な進め方が合うため、過度に手順を固定しすぎない方が力を発揮しやすいです。",
+  },
+  ao: {
+    high: "変化や刺激が少ない環境が続くと物足りなさを感じやすいため、新しい挑戦の機会が力になります。",
+    low: "急な変化が続くと負担になりやすいため、ペースを保てる環境が安心につながります。",
+  },
+  ce: {
+    high: "周囲の緊張や不満を敏感に感じ取るため、チームの雰囲気が悪化すると影響を受けやすいです。",
+    low: "周囲の感情の変化に気づきにくい面があるため、率直なフィードバックを心がけると助けになります。",
+  },
+  ea: {
+    high: "感情が行動に出やすいため、気持ちを言葉にできる場があると安定しやすいです。",
+    low: "気持ちを内に溜め込みやすいため、定期的に本音を聞く機会を作ると安心です。",
+  },
+  ec: {
+    high: "感情のコントロールが得意な分、無理をしていても気づかれにくいことがあるため、意識的に声をかけると安心です。",
+    low: "感情に振り回されやすい面があるため、落ち着いて話せる時間を確保すると力になります。",
+  },
+  acc: {
+    high: "対人関係の変化に敏感なため、異動や体制変更の際は特に丁寧なフォローが安心につながります。",
+    low: "対人関係のリスクにあまり動じないため、率直なコミュニケーションが合いやすいです。",
+  },
+  mpfc: {
+    high: "周囲からの評価を気にしやすいため、こまめに評価やフィードバックを伝えると安心につながります。",
+    low: "周囲の評価をあまり気にしないため、必要な時だけ簡潔にフィードバックする方が合っています。",
+  },
+  ofc: {
+    high: "周囲の感情に影響されやすいため、チーム内の雰囲気づくりが特に重要です。",
+    low: "周囲の感情に左右されにくいため、落ち着いて自分のペースを保ちやすいタイプです。",
+  },
+  solo: {
+    high: "自分のペースを大事にするため、裁量を持たせることが力を発揮する鍵になります。",
+    low: "周囲と歩調を合わせることを大事にするため、孤立させずチームの一員としての関わりが安心につながります。",
+  },
+};
+
+export function retentionTips(raw: RawScores): string[] {
+  const tips: string[] = [];
+  RAW_KEYS.forEach((k) => {
+    const v = raw[k];
+    if (v >= 65) tips.push(RAW_CARE[k].high);
+    else if (v < 40) tips.push(RAW_CARE[k].low);
+  });
+  return tips;
+}
+
+export function rawNarrative(raw: RawScores): string {
+  const highs = [...RAW_KEYS].filter((k) => raw[k] >= 65).sort((a, b) => raw[b] - raw[a]).slice(0, 2);
+  const lows = [...RAW_KEYS].filter((k) => raw[k] < 40).sort((a, b) => raw[a] - raw[b]).slice(0, 2);
+  let text = "";
+  if (highs.length) {
+    text += `特に${highs.map((k) => RAW_LABELS[k]).join("・")}の傾向が強く、${highs.map((k) => RAW_DEFS[k]).join("")}`;
+  }
+  if (lows.length) {
+    text += `一方で、${lows.map((k) => RAW_LABELS[k]).join("・")}は控えめな傾向があり、${lows.map((k) => RAW_DEFS[k]).join("")}`;
+  }
+  if (!text) text = "各項目がバランスよく分布しており、特定の傾向に偏りが少ないタイプです。";
+  return text;
+}
+
 export const DEFAULT_RAW: RawScores = {
   wp: 40, fd: 35, ao: 45, ce: 30, ea: 50, ec: 60, acc: 35, mpfc: 70, ofc: 50, solo: 45,
 };
