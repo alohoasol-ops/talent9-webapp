@@ -105,7 +105,7 @@ export const RAW_TRAITS: Record<RawKey, { high: string; low: string }> = {
 export function rawNarrative(raw: RawScores, name?: string): string {
   const highs = [...RAW_KEYS].filter((k) => raw[k] >= 65).sort((a, b) => raw[b] - raw[a]).slice(0, 2);
   const lows = [...RAW_KEYS].filter((k) => raw[k] < 40).sort((a, b) => raw[a] - raw[b]).slice(0, 2);
-  const who = name || "この方";
+  const who = name ? `${name}さん` : "この方";
   let text = "";
   if (highs.length) {
     text += `${who}は、${highs.map((k) => RAW_TRAITS[k].high).join("、")}人です。`;
