@@ -89,6 +89,14 @@ export function retentionTips(raw: RawScores): string[] {
   return tips;
 }
 
+export type CareLevel = "低" | "中" | "高";
+
+export function careLevel(raw: RawScores): { level: CareLevel; count: number } {
+  const count = retentionTips(raw).length;
+  const level: CareLevel = count >= 4 ? "高" : count >= 2 ? "中" : "低";
+  return { level, count };
+}
+
 export const RAW_TRAITS: Record<RawKey, { high: string; low: string }> = {
   wp: { high: "人の気持ちを汲み取りながら関わる", low: "人間関係よりも結果や仕組みを重視する" },
   fd: { high: "じっくり考えて計画的に進める", low: "細かい計画より、その場の流れで柔軟に動く" },
