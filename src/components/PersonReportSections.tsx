@@ -3,7 +3,7 @@
 import {
   rankedOf, TALENT_BY_KEY,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
-  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips, scoreDeltas,
+  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips, scoreDeltas, careLevel,
 } from "@/lib/talents";
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
@@ -39,6 +39,8 @@ export default function PersonReportSections({
   const sense = showSense ? rankedSense(member.raw) : [];
   const insight = showThinking && showSense ? combinedInsight(main, thinking[0].t, sense[0].t) : null;
   const comm = showThinking && showSense ? communicationInsight(thinking[0].t, sense[0].t) : null;
+  const care = careLevel(member.raw);
+  const careColor = care.level === "高" ? "var(--danger)" : care.level === "中" ? "#b8860b" : "var(--brand)";
 
   return (
     <div className="strength-block">
@@ -96,14 +98,25 @@ export default function PersonReportSections({
       <p className="field-group-title">どんな人か</p>
       <div className="info-box" style={{ marginBottom: 18 }}>{rawNarrative(member.raw, member.name)}</div>
 
-      <p className="field-group-title">定着のために気をつけたいポイント</p>
-      <div style={{ marginBottom: 18 }}>
+      <p className="field-group-title">
+        定着のために気をつけたいポイント
+        <span
+          className="chip"
+          style={{ marginLeft: 8, background: careColor, color: "#fff", borderColor: careColor }}
+        >
+          注意レベル：{care.level}
+        </span>
+      </p>
+      <div style={{ marginBottom: 8 }}>
         {retentionTips(member.raw).length > 0 ? (
           retentionTips(member.raw).map((t) => <p className="motiv-item" key={t}>・{t}</p>)
         ) : (
           <p className="motiv-item">各項目が標準的な範囲に収まっており、特に注意すべき偏りは見られません。</p>
         )}
       </div>
+      <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginBottom: 18 }}>
+        ※この注意レベルは、測定値が高め・低めに偏っている項目の数をもとにした参考情報であり、離職や退職を予測するものではありません。人事評価や処遇の判断材料として単独で用いず、日々の対話の参考としてご活用ください。
+      </p>
 
       {(showThinking || showSense) && (
         <>
