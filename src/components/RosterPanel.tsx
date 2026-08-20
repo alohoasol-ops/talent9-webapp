@@ -142,6 +142,8 @@ export default function RosterPanel({
                       <p className="def">{r.t.def}</p>
                       <p className="comment">{commentFor(r.t, m.raw)}</p>
                       <p className="roles"><strong>向いている職種例：</strong>{r.t.roles}</p>
+                      <p className="roles" style={{ marginTop: 4 }}><strong>向いている仕事：</strong>{r.t.goodFit}</p>
+                      <p className="roles" style={{ marginTop: 4 }}><strong>苦手になりやすい仕事：</strong>{r.t.poorFit}</p>
                     </div>
                   ))}
                 </div>
