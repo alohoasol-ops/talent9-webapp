@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import {
-  DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES,
+  DEFAULT_RAW, DEFAULT_EXTRA_RAW, THINKING_TYPES, SENSE_TYPES, computeScores, scoreDeltas,
   type RawKey, type RawScores, type ExtraRawScores,
 } from "@/lib/talents";
 import { extractFromPdf, extractThinkingFromPdf, extractSenseFromPdf } from "@/lib/pdfExtract";
@@ -171,6 +171,9 @@ export default function AddMemberPanel({
     onCancelEdit?.();
   }
 
+  const previewDeltas = editingMember ? scoreDeltas(computeScores(raw), editingMember.scores) : [];
+  const hasPreviewChange = previewDeltas.some((d) => d.delta !== 0);
+
   return (
     <div className="panel no-print">
       <h2><span className="n">01</span>　{editingMember ? `メンバーを編集：${editingMember.name || "(氏名未設定)"}` : "メンバーを追加"}</h2>
@@ -320,6 +323,34 @@ export default function AddMemberPanel({
                 </div>
               ))}
             </div>
+
+            {editingMember && hasPreviewChange && (
+              <div className="field-group">
+                <p className="field-group-title">現在の値との比較(保存前のプレビュー)</p>
+                <div className="scroll-x">
+                  <table className="data">
+                    <thead>
+                      <tr><th>才能</th><th>現在</th><th>入力中</th><th>変化</th></tr>
+                    </thead>
+                    <tbody>
+                      {previewDeltas.map((d) => (
+                        <tr key={d.t.key}>
+                          <td className="name-cell">{d.t.name}</td>
+                          <td className="mono">{d.previous.toFixed(1)}</td>
+                          <td className="mono">{d.current.toFixed(1)}</td>
+                          <td className="mono" style={{ color: d.delta > 0 ? "var(--brand)" : d.delta < 0 ? "var(--danger)" : "var(--ink-dim)" }}>
+                            {d.delta > 0 ? "▲" : d.delta < 0 ? "▼" : "→"} {d.delta > 0 ? "+" : ""}{d.delta.toFixed(1)}
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+                <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>
+                  「保存する」を押すと、この内容で確定し、現在の値が「前回」として記録されます。
+                </p>
+              </div>
+            )}
 
             <div className="btn-row">
               <button type="button" className="primary" onClick={handleAdd} disabled={pending}>
