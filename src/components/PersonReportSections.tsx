@@ -8,6 +8,7 @@ import {
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
 import JohariWindowSection from "./JohariWindowSection";
+import TalentRelationshipMap from "./TalentRelationshipMap";
 
 const TRUST_BUILDERS = [
   { label: "認める", note: "結果が出る前から、相手の存在や取り組みそのものを肯定する" },
@@ -205,6 +206,12 @@ export default function PersonReportSections({
       </div>
 
       <p className="field-group-title">チーム相性</p>
+      <div style={{ marginBottom: 12 }}>
+        <TalentRelationshipMap mainKey={main.key} />
+        <p style={{ fontSize: 12, color: "var(--ink-dim)", textAlign: "center", marginTop: 4 }}>
+          9つの才能を円状に並べた関係図です。{main.name}(青の太い点)を起点に、実線が最強の補完パートナー、点線がぶつかりやすい相手を示します。
+        </p>
+      </div>
       <div className="two-col" style={{ marginBottom: 18 }}>
         <div className="compat-card compat-good">
           <p className="compat-label">◎ 最強の補完パートナー</p>
