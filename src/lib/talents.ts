@@ -288,8 +288,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["感覚や勢いだけで物事が決まる", "根拠を求めても聞き入れられない", "場当たり的な方針転換が続く"],
     managerTips: ["根拠やデータを扱う役割を任せる", "意思決定の理由を共有し納得感を持たせる", "分析・検証が必要な課題を渡す"],
     compatibility: {
-      complement: "create", complementNote: "発想力の自由なアイデアを、論理力が現実的な形に整理する組み合わせです。",
-      tension: "lead", tensionNote: "慎重に検証したい論理力と、スピード重視で決断する巻き込み力はペースが合わないことがあります。",
+      complement: "space", complementNote: "論理力の緻密さに、彩る力の表現力が加わると、機能的で美しい形が生まれます。",
+      tension: "expr", tensionNote: "根拠を積み上げてから話したい論理力と、感じたことをすぐ言葉にしたい伝達力は、話すペースが異なることがあります。",
     },
   },
   {
@@ -307,8 +307,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["決まったやり方を強制される", "前例主義・変化のない繰り返し作業", "アイデアを頭ごなしに否定される"],
     managerTips: ["新しい企画やアイデア出しの機会を与える", "結果だけでなく発想の過程も評価する", "前例のないテーマに挑戦させる"],
     compatibility: {
-      complement: "order", complementNote: "発想力の新しいアイデアを、継続力が最後までやり抜く粘り強さで支える組み合わせです。",
-      tension: "logic", tensionNote: "スピード感のある発想力と、根拠を求める論理力は、初期のテンポが合わないことがあります。",
+      complement: "lead", complementNote: "発想力の新しいアイデアを、巻き込み力が周囲を動かして形にする組み合わせです。",
+      tension: "empathy", tensionNote: "スピーディに発想を広げたい発想力と、一人ひとりに丁寧に向き合いたい共感力はペースが合わないことがあります。",
     },
   },
   {
@@ -327,8 +327,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["対立や衝突が絶えない環境", "成果だけで人間関係が軽視される", "孤立して働くことを求められる"],
     managerTips: ["人と関わる役割(窓口・相談役)を任せる", "チームの雰囲気づくりへの貢献を言語化して評価する", "一対一で話す時間を定期的に確保する"],
     compatibility: {
-      complement: "lead", complementNote: "人を思う共感力と、前に進める巻き込み力が組み合わさると、無理のない推進力が生まれます。",
-      tension: "logic", tensionNote: "感情面への配慮を求める共感力と、合理性を優先する論理力はすれ違いやすい組み合わせです。",
+      complement: "order", complementNote: "共感力の丁寧な関わりに、継続力の粘り強さが加わると、長く続く信頼関係が育ちます。",
+      tension: "space", tensionNote: "人への配慮を優先したい共感力と、形や見た目の完成度を優先したい彩る力は、力の入れどころが異なることがあります。",
     },
   },
   {
@@ -347,8 +347,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["承認プロセスが多く決断できない", "指示待ちを求められる", "成果より過程ばかり管理される"],
     managerTips: ["裁量を持たせて任せる", "目標設定とその後の振り返りを一緒に行う", "小さなプロジェクトの責任者を経験させる"],
     compatibility: {
-      complement: "empathy", complementNote: "推進力のある巻き込み力に、共感力の人への配慮が加わると、無理のない前進ができます。",
-      tension: "intro", tensionNote: "スピードを求める巻き込み力と、じっくり考えたい探究力はテンポが合わないことがあります。",
+      complement: "expr", complementNote: "巻き込み力の推進力に、伝達力の分かりやすい発信が加わると、ビジョンが周囲によく伝わります。",
+      tension: "order", tensionNote: "スピードを求める巻き込み力と、着実に進めたい継続力はペースが合わないことがあります。",
     },
   },
   {
@@ -367,7 +367,7 @@ export const TALENTS: Talent[] = [
     motivationDown: ["拙速な結論を求められる", "浅い理解のまま進めさせられる", "一人で考える時間が取れない"],
     managerTips: ["一つのテーマを深掘りする時間を確保する", "拙速な結論を求めず、じっくり検討させる", "専門性を発揮できる役割を用意する"],
     compatibility: {
-      complement: "expr", complementNote: "探究力が深めた知見を、伝達力が分かりやすく発信する組み合わせです。",
+      complement: "logic", complementNote: "探究力が掘り下げた知見を、論理力が筋道立てて整理し、確かな結論に導く組み合わせです。",
       tension: "lead", tensionNote: "深く考えたい探究力と、スピードを求める巻き込み力はテンポが合わないことがあります。",
     },
   },
@@ -387,8 +387,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["発言の機会が少ない", "決まった伝え方を強制される", "発信しても反応や関心を示されない"],
     managerTips: ["人前で発表・説明する機会を与える", "発信した内容にきちんと反応・フィードバックする", "社内外への情報発信の役割を任せる"],
     compatibility: {
-      complement: "intro", complementNote: "探究力が深めた知見を、伝達力が分かりやすく届ける組み合わせです。",
-      tension: "body", tensionNote: "言葉で伝えたい伝達力と、まず動いて見せたい実践力はスタイルが異なることがあります。",
+      complement: "body", complementNote: "伝達力が示した方向性を、実践力が実際に手を動かして体現する組み合わせです。",
+      tension: "intro", tensionNote: "言葉にしてすぐ発信したい伝達力と、じっくり考えを深めたい探究力はテンポが合わないことがあります。",
     },
   },
   {
@@ -406,8 +406,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["機能・効率だけで判断される", "完成イメージを共有せず進められる", "表現の細部を軽視される"],
     managerTips: ["見た目や使いやすさを検討する工程に関わらせる", "完成イメージを共有した上で任せる", "表現やデザインへのこだわりを尊重する"],
     compatibility: {
-      complement: "body", complementNote: "彩る力が描いた形を、実践力が実際に作り上げる組み合わせです。",
-      tension: "order", tensionNote: "新しい表現を求める彩る力と、決まった手順を守りたい継続力は方向性が異なることがあります。",
+      complement: "create", complementNote: "彩る力の表現力に、発想力の自由な着想が加わると、新しい形が次々と生まれます。",
+      tension: "body", tensionNote: "完成度にこだわりたい彩る力と、とにかく早く形にしたい実践力は、スピード感が異なることがあります。",
     },
   },
   {
@@ -426,8 +426,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["座学や書類作業ばかりが続く", "頭で考えるだけで実行に移せない", "じっと待たされる時間が長い"],
     managerTips: ["実際に手を動かす・試作する機会を与える", "座学より実践を通じた学びの場を用意する", "素早く試して素早く直すサイクルを許容する"],
     compatibility: {
-      complement: "space", complementNote: "実践力の実行力に、彩る力の形や美しさへの視点が加わる組み合わせです。",
-      tension: "intro", tensionNote: "まず動きたい実践力と、じっくり考えたい探究力はペースが合わないことがあります。",
+      complement: "empathy", complementNote: "実践力の行動力に、共感力の人への配慮が加わると、周囲を置き去りにしない前進ができます。",
+      tension: "logic", tensionNote: "まず動いて試したい実践力と、根拠を確かめてから動きたい論理力は進め方が異なることがあります。",
     },
   },
   {
@@ -445,8 +445,8 @@ export const TALENTS: Talent[] = [
     motivationDown: ["頻繁な方針転換・場当たり的な変更", "努力の過程が評価されない", "秩序のない進め方を強いられる"],
     managerTips: ["計画立てて進める役割を任せる", "地道な積み重ねを定期的に評価・承認する", "急な方針転換を避け、見通しを示す"],
     compatibility: {
-      complement: "create", complementNote: "安定した継続力に、発想力の新しいアイデアが刺激を与える組み合わせです。",
-      tension: "lead", tensionNote: "スピードを求める巻き込み力と、着実に進めたい継続力はペースが合わないことがあります。",
+      complement: "intro", complementNote: "継続力の着実さに、探究力の深い洞察が加わると、質の高い積み重ねが生まれます。",
+      tension: "create", tensionNote: "決まったやり方を守りたい継続力と、常に新しさを求める発想力は方向性が異なることがあります。",
     },
   },
 ];
@@ -457,6 +457,8 @@ export const TALENT_BY_KEY: Record<TalentKey, Talent> = TALENTS.reduce((acc, t) 
 }, {} as Record<TalentKey, Talent>);
 
 export const CHART_ORDER: TalentKey[] = ["logic", "create", "empathy", "lead", "intro", "expr", "space", "body", "order"];
+
+export const RELATIONSHIP_ORDER: TalentKey[] = ["create", "lead", "expr", "body", "empathy", "order", "intro", "logic", "space"];
 
 export type TalentScores = Record<TalentKey, number>;
 
