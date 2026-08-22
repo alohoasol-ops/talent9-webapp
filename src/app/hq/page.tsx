@@ -3,6 +3,9 @@ import { requireHqAdmin } from "@/lib/auth";
 import { createClient, createAdminClient } from "@/lib/supabase/server";
 import { fromDbRow, type DbTeamMemberRow } from "@/lib/types";
 import { rankedOf } from "@/lib/talents";
+
+const MEMBER_SELECT =
+  "id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, self_perception, johari_open_note, peer_feedback(id, feedback_text, created_at), created_at";
 import { emailToLoginId } from "@/lib/slug";
 import Topbar from "@/components/Topbar";
 import PortfolioPanel from "@/components/PortfolioPanel";
@@ -23,7 +26,7 @@ export default async function HqPage() {
 
   const { data: memberRows } = await supabase
     .from("team_members")
-    .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at");
+    .select(MEMBER_SELECT);
 
   const allMembers = ((memberRows as DbTeamMemberRow[] | null) || []).map(fromDbRow);
 
