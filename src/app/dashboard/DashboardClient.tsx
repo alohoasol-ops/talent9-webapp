@@ -5,6 +5,9 @@ import { createClient } from "@/lib/supabase/client";
 import { computeScores, type RawScores, type ExtraRawScores } from "@/lib/talents";
 import type { TeamMember, DbTeamMemberRow, GoalSheet } from "@/lib/types";
 import { fromDbRow } from "@/lib/types";
+
+const MEMBER_SELECT =
+  "id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, self_perception, johari_open_note, peer_feedback(id, feedback_text, created_at), created_at";
 import AddMemberPanel from "@/components/AddMemberPanel";
 import RosterPanel from "@/components/RosterPanel";
 import PortfolioPanel from "@/components/PortfolioPanel";
@@ -52,7 +55,8 @@ export default function DashboardClient({
         raw_scores: input.raw,
         talent_scores: scores,
       })
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
+      .select(MEMBER_SELECT)
+      .order("created_at", { ascending: false, foreignTable: "peer_feedback" })
       .single();
 
     setPending(false);
@@ -83,7 +87,8 @@ export default function DashboardClient({
         previous_measured_date: existing ? existing.measuredDate : null,
       })
       .eq("id", id)
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
+      .select(MEMBER_SELECT)
+      .order("created_at", { ascending: false, foreignTable: "peer_feedback" })
       .single();
 
     setPending(false);
@@ -104,11 +109,31 @@ export default function DashboardClient({
       .from("team_members")
       .update({ goal_sheet: goalSheet })
       .eq("id", id)
-      .select("id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, created_at")
+      .select(MEMBER_SELECT)
+      .order("created_at", { ascending: false, foreignTable: "peer_feedback" })
       .single();
 
     if (updateError || !data) {
       alert("接続シートの保存に失敗しました。時間をおいて再度お試しください。");
+      return;
+    }
+
+    const updated = fromDbRow(data as DbTeamMemberRow);
+    setMembers((prev) => prev.map((m) => (m.id === id ? updated : m)));
+  }
+
+  async function handleSaveJohari(id: string, fields: { selfPerception: string; johariOpenNote: string }) {
+    const supabase = createClient();
+    const { data, error: updateError } = await supabase
+      .from("team_members")
+      .update({ self_perception: fields.selfPerception, johari_open_note: fields.johariOpenNote })
+      .eq("id", id)
+      .select(MEMBER_SELECT)
+      .order("created_at", { ascending: false, foreignTable: "peer_feedback" })
+      .single();
+
+    if (updateError || !data) {
+      alert("ジョハリの窓の保存に失敗しました。時間をおいて再度お試しください。");
       return;
     }
 
@@ -145,6 +170,7 @@ export default function DashboardClient({
           onPrintMember={setPrintMemberId}
           onEditMember={setEditingMemberId}
           onSaveGoalSheet={handleSaveGoalSheet}
+          onSaveJohari={handleSaveJohari}
           printTargetId={printMemberId}
         />
       </div>
