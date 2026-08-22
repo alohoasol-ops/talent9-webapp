@@ -24,6 +24,18 @@ export const DEFAULT_GOAL_SHEET: GoalSheet = {
   actionCompany: "",
 };
 
+export interface PeerFeedback {
+  id: string;
+  feedbackText: string;
+  createdAt: string;
+}
+
+export interface DbPeerFeedbackRow {
+  id: string;
+  feedback_text: string;
+  created_at: string;
+}
+
 export interface TeamMember {
   id: string;
   companyId: string;
@@ -34,6 +46,9 @@ export interface TeamMember {
   goalSheet: GoalSheet;
   previousScores: TalentScores | null;
   previousMeasuredDate: string | null;
+  selfPerception: string;
+  johariOpenNote: string;
+  peerFeedback: PeerFeedback[];
   createdAt: string;
 }
 
@@ -47,6 +62,9 @@ export interface DbTeamMemberRow {
   goal_sheet: Partial<GoalSheet> | null;
   previous_talent_scores: TalentScores | null;
   previous_measured_date: string | null;
+  self_perception: string | null;
+  johari_open_note: string | null;
+  peer_feedback: DbPeerFeedbackRow[] | null;
   created_at: string;
 }
 
@@ -61,6 +79,11 @@ export function fromDbRow(row: DbTeamMemberRow): TeamMember {
     goalSheet: { ...DEFAULT_GOAL_SHEET, ...(row.goal_sheet || {}) },
     previousScores: row.previous_talent_scores ?? null,
     previousMeasuredDate: row.previous_measured_date ?? null,
+    selfPerception: row.self_perception ?? "",
+    johariOpenNote: row.johari_open_note ?? "",
+    peerFeedback: (row.peer_feedback || [])
+      .map((f) => ({ id: f.id, feedbackText: f.feedback_text, createdAt: f.created_at }))
+      .sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1)),
     createdAt: row.created_at,
   };
 }
