@@ -7,6 +7,7 @@ import {
 } from "@/lib/talents";
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
+import JohariWindowSection from "./JohariWindowSection";
 
 const TRUST_BUILDERS = [
   { label: "認める", note: "結果が出る前から、相手の存在や取り組みそのものを肯定する" },
@@ -24,9 +25,11 @@ const TRUST_ERODERS = [
 export default function PersonReportSections({
   member,
   onSaveGoalSheet,
+  onSaveJohari,
 }: {
   member: TeamMember;
   onSaveGoalSheet?: (id: string, sheet: GoalSheet) => Promise<void> | void;
+  onSaveJohari?: (id: string, fields: { selfPerception: string; johariOpenNote: string }) => Promise<void> | void;
 }) {
   const ranked = rankedOf(member.scores);
   const main = ranked[0].t;
@@ -117,6 +120,10 @@ export default function PersonReportSections({
       <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginBottom: 18 }}>
         ※この注意レベルは、測定値が高め・低めに偏っている項目の数をもとにした参考情報であり、離職や退職を予測するものではありません。人事評価や処遇の判断材料として単独で用いず、日々の対話の参考としてご活用ください。
       </p>
+
+      <div style={{ marginBottom: 18 }}>
+        <JohariWindowSection member={member} onSave={onSaveJohari} />
+      </div>
 
       {(showThinking || showSense) && (
         <>
