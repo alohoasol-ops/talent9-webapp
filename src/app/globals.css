@@ -83,8 +83,19 @@ header.top p{ margin:0; color:var(--ink-dim); font-size:14px; max-width:66ch; }
 .name-field input[type="text"], .name-field input[type="date"], .name-field input[type="email"], .name-field input[type="password"]{
   width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-alt); color:var(--ink); font-size:14px;
 }
+.name-field textarea{
+  width:100%; padding:8px 10px; border-radius:8px; border:1px solid var(--border); background:var(--surface-alt); color:var(--ink); font-size:14px; font-family:inherit; resize:vertical;
+}
+.name-field textarea:focus, .name-field input:focus{ outline:2px solid var(--brand); outline-offset:1px; }
 .name-row{ display:flex; gap:10px; }
 .name-row .name-field{ flex:1; }
+
+.johari-grid{ display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:14px; }
+.johari-cell{ border:1px solid var(--border); border-radius:12px; padding:14px; background:var(--surface-alt); }
+.johari-cell h4{ font-size:13.5px; margin:0 0 4px; color:var(--brand); }
+.johari-cell .johari-sub{ font-size:11.5px; color:var(--ink-dim); margin:0 0 10px; }
+.johari-feedback-item{ font-size:13px; padding:8px 10px; border-radius:8px; background:var(--surface); border:1px solid var(--border); margin-bottom:6px; }
+@media (max-width:640px){ .johari-grid{ grid-template-columns:1fr; } }
 
 .dropzone{ border:1.5px dashed var(--border); border-radius:12px; padding:16px 14px; text-align:center; cursor:pointer; background:var(--surface-alt); transition:border-color .15s ease, background .15s ease; margin-bottom:14px; }
 .dropzone:hover, .dropzone.drag{ border-color:var(--brand); background:var(--brand-soft); }
