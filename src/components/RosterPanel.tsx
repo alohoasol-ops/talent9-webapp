@@ -39,6 +39,7 @@ export default function RosterPanel({
   onPrintMember,
   onEditMember,
   onSaveGoalSheet,
+  onSaveJohari,
   printTargetId,
   readOnly,
   step = "02",
@@ -48,6 +49,7 @@ export default function RosterPanel({
   onPrintMember?: (id: string) => void;
   onEditMember?: (id: string) => void;
   onSaveGoalSheet?: (id: string, sheet: GoalSheet) => Promise<void> | void;
+  onSaveJohari?: (id: string, fields: { selfPerception: string; johariOpenNote: string }) => Promise<void> | void;
   printTargetId?: string | null;
   readOnly?: boolean;
   step?: string;
@@ -148,7 +150,7 @@ export default function RosterPanel({
                   ))}
                 </div>
               </div>
-              <PersonReportSections member={m} onSaveGoalSheet={onSaveGoalSheet} />
+              <PersonReportSections member={m} onSaveGoalSheet={onSaveGoalSheet} onSaveJohari={onSaveJohari} />
             </details>
           );
         })
