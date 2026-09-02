@@ -5,6 +5,7 @@ import { fromDbRow, type DbTeamMemberRow } from "@/lib/types";
 const MEMBER_SELECT =
   "id, company_id, name, measured_date, raw_scores, talent_scores, goal_sheet, previous_talent_scores, previous_measured_date, self_perception, johari_open_note, peer_feedback(id, feedback_text, created_at), created_at";
 import { emailToLoginId } from "@/lib/slug";
+import Link from "next/link";
 import Topbar from "@/components/Topbar";
 import DashboardClient from "./DashboardClient";
 
@@ -40,6 +41,14 @@ export default async function DashboardPage() {
             <span className="badge">独自換算ロジック</span>
           </div>
         </header>
+
+        <div className="panel">
+          <h2>商談創出AI</h2>
+          <p className="panel-sub">営業マンを増やす前に、商談を増やす。診断・理想顧客設計・リード育成をAIがサポートします。</p>
+          <Link href="/dashboard/sales-ai" className="btn primary">
+            商談創出AIを開く →
+          </Link>
+        </div>
 
         <DashboardClient companyId={profile.companyId!} initialMembers={members} />
       </div>
