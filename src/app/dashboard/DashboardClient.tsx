@@ -13,6 +13,7 @@ import RosterPanel from "@/components/RosterPanel";
 import PortfolioPanel from "@/components/PortfolioPanel";
 import FitSimulatorPanel from "@/components/FitSimulatorPanel";
 import TeamPositionMap from "@/components/TeamPositionMap";
+import TalentGuide from "@/components/TalentGuide";
 import SummaryPanel from "@/components/SummaryPanel";
 
 export default function DashboardClient({
@@ -179,6 +180,7 @@ export default function DashboardClient({
         <PortfolioPanel members={members} />
         <TeamPositionMap members={members} />
         <FitSimulatorPanel members={members} />
+        <TalentGuide />
       </div>
       <div className={printMemberId ? "no-print" : undefined}>
         <SummaryPanel
