@@ -77,6 +77,10 @@ export default function PersonReportSections({
         <div className="stat-card"><div className="stat-n" style={{ fontSize: 16 }}>{main.name}</div><div className="stat-l">メイン才能</div></div>
         <div className="stat-card"><div className="stat-n" style={{ fontSize: 16 }}>{sub.name}</div><div className="stat-l">サブ才能</div></div>
       </div>
+      <div style={{ marginBottom: 12 }}>
+        <p style={{ fontSize: 13.5, margin: "0 0 6px", lineHeight: 1.6 }}><strong>{main.name}</strong>：{main.def}</p>
+        <p style={{ fontSize: 13.5, margin: 0, lineHeight: 1.6 }}><strong>{sub.name}</strong>：{sub.def}</p>
+      </div>
       <div className="info-box" style={{ marginBottom: 18 }}>{main.essence}</div>
 
       <p className="field-group-title">脳の使用傾向(測定値の詳細)</p>
