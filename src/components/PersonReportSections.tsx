@@ -1,14 +1,13 @@
 "use client";
 
 import {
-  rankedOf, TALENT_BY_KEY,
+  rankedOf,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
   RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips, scoreDeltas, careLevel,
 } from "@/lib/talents";
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
 import JohariWindowSection from "./JohariWindowSection";
-import TalentRelationshipMap from "./TalentRelationshipMap";
 
 const TRUST_BUILDERS = [
   { label: "認める", note: "結果が出る前から、相手の存在や取り組みそのものを肯定する" },
@@ -35,8 +34,6 @@ export default function PersonReportSections({
   const ranked = rankedOf(member.scores);
   const main = ranked[0].t;
   const sub = ranked[1].t;
-  const complementTalent = TALENT_BY_KEY[main.compatibility.complement];
-  const tensionTalent = TALENT_BY_KEY[main.compatibility.tension];
   const showThinking = hasExtraData(THINKING_KEYS, member.raw);
   const showSense = hasExtraData(SENSE_KEYS, member.raw);
   const thinking = showThinking ? rankedThinking(member.raw) : [];
@@ -202,26 +199,6 @@ export default function PersonReportSections({
         <div className="motiv-box motiv-down">
           <p className="motiv-title">下がる要因</p>
           {main.motivationDown.map((t) => <p className="motiv-item" key={t}>▼ {t}</p>)}
-        </div>
-      </div>
-
-      <p className="field-group-title">チーム相性</p>
-      <div style={{ marginBottom: 12 }}>
-        <TalentRelationshipMap mainKey={main.key} />
-        <p style={{ fontSize: 12, color: "var(--ink-dim)", textAlign: "center", marginTop: 4 }}>
-          9つの才能を円状に並べた関係図です。{main.name}(青の太い点)を起点に、実線が最強の補完パートナー、点線がぶつかりやすい相手を示します。
-        </p>
-      </div>
-      <div className="two-col" style={{ marginBottom: 18 }}>
-        <div className="compat-card compat-good">
-          <p className="compat-label">◎ 最強の補完パートナー</p>
-          <h4>{complementTalent.name}</h4>
-          <p>{main.compatibility.complementNote}</p>
-        </div>
-        <div className="compat-card compat-tense">
-          <p className="compat-label">△ ぶつかりやすい相手</p>
-          <h4>{tensionTalent.name}</h4>
-          <p>{main.compatibility.tensionNote}</p>
         </div>
       </div>
 
