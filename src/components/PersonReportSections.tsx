@@ -3,7 +3,7 @@
 import {
   rankedOf,
   THINKING_KEYS, SENSE_KEYS, hasExtraData, rankedThinking, rankedSense, combinedInsight, communicationInsight,
-  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawBand, rawNarrative, retentionTips, scoreDeltas, careLevel,
+  RAW_KEYS, RAW_LABELS, RAW_DEFS, rawNarrative, retentionTips, scoreDeltas, careLevel,
 } from "@/lib/talents";
 import type { TeamMember, GoalSheet } from "@/lib/types";
 import GoalSheetForm from "./GoalSheetForm";
@@ -91,7 +91,7 @@ export default function PersonReportSections({
             <div className="coverage-row" key={k}>
               <span className="cov-label">{RAW_LABELS[k]}</span>
               <div className="cov-track"><div className="cov-fill" style={{ width: `${v}%` }} /></div>
-              <span className="cov-n">{v.toFixed(0)}%({rawBand(v)})</span>
+              <span className="cov-n">{v.toFixed(0)}%</span>
             </div>
           );
         })}
