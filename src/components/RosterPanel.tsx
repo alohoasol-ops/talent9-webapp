@@ -18,7 +18,10 @@ function RankTable({ scores }: { scores: TeamMember["scores"] }) {
           {ranked.map((r, idx) => (
             <tr key={r.t.key}>
               <td>{idx + 1}</td>
-              <td>{r.t.name}</td>
+              <td>
+                <strong>{r.t.name}</strong>
+                <div style={{ fontSize: 11.5, color: "var(--ink-dim)", marginTop: 2, fontWeight: 400, lineHeight: 1.45 }}>{r.t.def}</div>
+              </td>
               <td className="mono">
                 {r.score.toFixed(1)}
                 <div className="cov-track" style={{ marginTop: 3 }}>
