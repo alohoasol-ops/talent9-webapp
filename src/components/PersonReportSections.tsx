@@ -88,16 +88,16 @@ export default function PersonReportSections({
         {RAW_KEYS.map((k) => {
           const v = member.raw[k];
           return (
-            <div className="coverage-row" key={k}>
-              <span className="cov-label">{RAW_LABELS[k]}</span>
-              <div className="cov-track"><div className="cov-fill" style={{ width: `${v}%` }} /></div>
-              <span className="cov-n">{v.toFixed(0)}%</span>
+            <div key={k} style={{ marginBottom: 8 }}>
+              <div className="coverage-row">
+                <span className="cov-label">{RAW_LABELS[k]}</span>
+                <div className="cov-track"><div className="cov-fill" style={{ width: `${v}%` }} /></div>
+                <span className="cov-n">{v.toFixed(0)}%</span>
+              </div>
+              <p style={{ fontSize: 11.5, color: "var(--ink-dim)", margin: "2px 0 0", lineHeight: 1.5 }}>{RAW_DEFS[k]}</p>
             </div>
           );
         })}
-        <p style={{ fontSize: 12.5, color: "var(--ink-dim)", marginTop: 6 }}>
-          {RAW_KEYS.map((k) => `${RAW_LABELS[k]}：${RAW_DEFS[k]}`).join(" ")}
-        </p>
       </div>
 
       <p className="field-group-title">どんな人か</p>
